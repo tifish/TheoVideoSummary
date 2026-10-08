@@ -51,6 +51,11 @@
   .tline .chip { cursor: default; }
   .detail { display: none; border-top: 1px solid var(--line); padding: 6px 20px 18px; }
   .card.open .detail { display: block; }
+  .toggle { display: block; width: 100%; border: 0; border-top: 1px solid var(--line); background: none;
+    color: var(--accent); font-size: 14px; padding: 10px; cursor: pointer; }
+  .toggle:hover { background: var(--accent-soft); }
+  .card.open .toggle.expand { display: none; }
+  .toggle.collapse { margin: 16px -20px -18px; width: calc(100% + 40px); }
   .detail h3 { font-size: 14px; margin: 16px 0 6px; color: var(--accent); letter-spacing: .02em; }
   .detail ul { margin: 0; padding-left: 20px; }
   .detail li { margin: 4px 0; }
@@ -132,6 +137,7 @@ function card(v) {
         <div class="tline"><span>${fmtDate(v.date)}</span>${(v.tags||[]).map(t => `<span class="chip">${esc(t)}</span>`).join("")}</div>
       </div>
     </div>
+    <button class="toggle expand" data-act="open">展开重要结论与要点 ▾</button>
     <div class="detail">
       <h3>重要结论</h3><ul class="concl">${tsItems(v.conclusions, v)}</ul>
       <h3>内容要点</h3><ul>${tsItems(v.key_points, v)}</ul>
@@ -141,6 +147,7 @@ function card(v) {
         <a href="#${esc(v.id)}">链接到此</a>
         ${v.sponsor ? `<span>赞助：${esc(v.sponsor)}</span>` : ""}
       </div>
+      <button class="toggle collapse" data-act="close">收起 ▴</button>
     </div>
   </article>`;
 }
@@ -179,7 +186,13 @@ function render() {
 function openFromHash(scroll = true) {
   const id = decodeURIComponent(location.hash.slice(1));
   const el = id && document.getElementById("v-" + id);
-  if (el) { el.classList.add("open"); if (scroll) el.scrollIntoView({block: "start"}); }
+  if (el) { el.classList.add("open"); if (scroll) scrollToCard(el); }
+}
+
+// 顶栏是 sticky 的，滚动定位时要扣掉它的高度
+const headerH = () => document.querySelector("header").offsetHeight;
+function scrollToCard(el) {
+  window.scrollTo({top: el.getBoundingClientRect().top + scrollY - headerH() - 8});
 }
 
 function init() {
@@ -195,6 +208,14 @@ function init() {
   $("#picked").addEventListener("click", toggleTag);
   $("#list").addEventListener("click", (e) => {
     if (e.target.closest("a")) return;
+    const btn = e.target.closest(".toggle");
+    if (btn) {
+      const c = btn.closest(".card");
+      c.classList.toggle("open", btn.dataset.act === "open");
+      // 从底部收起时，把卡片顶部滚回视野，避免停在下一张卡片中间
+      if (btn.dataset.act === "close" && c.getBoundingClientRect().top < headerH()) scrollToCard(c);
+      return;
+    }
     const row = e.target.closest(".row"); if (row) row.parentElement.classList.toggle("open");
   });
   window.addEventListener("hashchange", () => openFromHash());
