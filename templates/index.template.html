@@ -62,7 +62,8 @@
   .ts { font-family: ui-monospace, Consolas, monospace; font-size: 12px; background: var(--chip);
     padding: 0 6px; border-radius: 4px; margin-right: 6px; white-space: nowrap; }
   .concl li::marker { color: var(--accent); }
-  .actions { margin-top: 14px; font-size: 13px; display: flex; gap: 16px; color: var(--muted); }
+  .actions { margin-top: 14px; font-size: 13px; display: flex; flex-wrap: wrap; gap: 6px 16px; color: var(--muted); }
+  .actions a { white-space: nowrap; }
   .empty { text-align: center; color: var(--muted); padding: 60px 0; }
   mark { background: #fde68a; color: inherit; border-radius: 2px; }
   @media (max-width: 640px) {
