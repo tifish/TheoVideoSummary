@@ -1,0 +1,42 @@
+{
+  "id": "nYA0yASgaZI",
+  "title_zh": "$200 的 Codex 套餐现在还值吗？",
+  "tldr": "OpenAI 将 $200 Codex 套餐的额度折算减半，Theo 实测月度 API 等值从约 $12K–24K 跌到约 $2.5K；但只要改用极便宜的 GPT-6.1 Soul，可完成的任务量反而更多。真正的败笔是同时推出 $500 套餐和天价的 Ultrafast。",
+  "conclusions": [
+    { "t": "04:35", "text": "订阅额度的「API 等值」和 API 标价都是「假数字」：API 定价历史上有约 95% 的毛利，烧 $100 token 的实际算力+电力成本大约只有 $2–5，所以订阅与 API 之间的巨大补贴差距会随竞争逐步收窄。" },
+    { "t": "09:37", "text": "Theo 推算 Anthropic 将 Fable 5 / Mythos 5 定价为 $10/$50（远低于 Mythos 预览的 $25/$125），在模型规模不变的前提下毛利从约 95% 降到约 87.5%，单位利润从约 $118.75 降到 $43.75——这就是 Claude 订阅中 Fable 只能用一半额度的原因，也迫使 OpenAI 把 Astra 定成同价。" },
+    { "t": "13:59", "text": "GPT-6.1 Soul 定价 $2/$10、缓存读取 $0.10/M，Theo 认为它原本按 Opus 5 的 $5/$25 规划，实际有效成本约便宜 5 倍，毛利可能只剩约 50%；OpenAI 削减订阅额度主要是为了让 6.1 Soul 在 $200 套餐里「感觉无限」，同时不被重度用户拖垮。" },
+    { "t": "16:45", "text": "实测：一周仅获得约 $574 的用量，29 小时即可跑死一个账号，月度等值约 $2.5K，约为之前的 1/10；但同量级的约 1,500–1,800 次请求，Astra 花费 $534，6.1 Soul 仅 $38，差距超过 10 倍。" },
+    { "t": "20:37", "text": "Theo 自测 Terminal Bench：6.1 Soul（max）创最高分，xhigh 档与 Opus 5.5 基本打平，但每任务成本 $0.96 对 $13.11（约 1/13）。应看「每任务成本」而非订阅的美元等值——额度减半仍可能多完成约 5 倍任务。" },
+    { "t": "18:58", "text": "写要上线的代码，$200 Claude 套餐 + Opus 5.5 的性价比无可替代；Theo 自己开了 6 个 Claude 账号，几乎不再用 Fable。6.1 Soul 则是「史上性价比最高的模型」，如果必须付 API 价格他会毫不犹豫选 Soul。" },
+    { "t": "24:24", "text": "$500 套餐是公关灾难：把 20x 改成 10x 的同时推「多付 2.5 倍拿 25x」，让人觉得阴险。$200 订阅本质是营销而非利润来源（利润来自 $8/$20 消费者套餐和 API）。" },
+    { "t": "25:32", "text": "Ultrafast 是更大的错误：Astra 开 Ultrafast 后输入 $60/M、输出 $300/M（长上下文达 $120/$450），审两个 PR 花了 $600；$500 套餐每周约 $1,000 的 Ultrafast 等值，约 2.1 小时生成就耗尽周额度。原因是 Cerebras 方案没跑通，改用 Nvidia 硬件过度配置。" }
+  ],
+  "key_points": [
+    { "t": "00:00", "text": "背景：几周前 $200 Codex 套餐可得约 $12K/月推理额度，Claude 约 $8K；Tibo 宣布额度计算方式调整，等于减半。" },
+    { "t": "01:45", "text": "提出问题：是否就此没理由用 Codex 订阅？是否是逼人升级 $500 套餐的阴谋？（随后为 Browserbase 赞助段）" },
+    { "t": "04:00", "text": "Theo 7 天 API 等值花费约 $20K，说明订阅价和 API 价都与真实成本脱节。" },
+    { "t": "05:44", "text": "Claude 订阅的限制：只能在 Claude Code（及通过 Agent SDK 调用的 T3 Code）中使用，无法接入 Pi、Hermes 等；Codex 订阅几乎可在任何地方用，只要不对外提供服务。" },
+    { "t": "07:26", "text": "把模型分成两组对比，引出 Project Glasswing / Mythos 原定价与 Fable 5 实际定价的差异。" },
+    { "t": "08:32", "text": "按 95% 毛利假设推算 Mythos 与 Fable 的成本和利润变化，解释 Anthropic 为何限制 Fable 只能用一半额度。" },
+    { "t": "12:54", "text": "分析 GPT-6.1 Soul 的定价：推测原计划 $5/$25，实际 $2/$10 且缓存读取再减半，利润率大幅下降。" },
+    { "t": "16:13", "text": "OpenAI 选择不对 Soul 单独设限，而是整体收缩订阅补贴；Theo 认为宣布时机很糟。" },
+    { "t": "17:18", "text": "展示个人用量明细：Astra 与 6.1 Soul 在相近请求量下的成本对比。" },
+    { "t": "20:05", "text": "用自建的 Slopolitics 网站展示 Artificial Analysis 指数与价格的帕累托前沿，6.1 Soul / Luna 构成前沿。" },
+    { "t": "22:49", "text": "General Translation 赞助段。" },
+    { "t": "24:24", "text": "「开喷」环节：$500 套餐与额度削减同时发布是自伤。" },
+    { "t": "25:32", "text": "Ultrafast 定价拆解与 $500 套餐的实际可用时长。" },
+    { "t": "29:58", "text": "OpenAI 过去的优势是后训练/RL 让小模型很强，Anthropic 近期已追上；OpenAI 需要做出比 Astra 更好、像 Opus 5.5 一样好用又够快的模型。" },
+    { "t": "31:06", "text": "结论：只为 Astra 买 $200 Codex 不值；Theo 的用法是 Claude 干活、通过 T3 Code 调用 Codex（Soul）子代理做审查。" },
+    { "t": "32:12", "text": "预测：随着 API 价格下降，订阅补贴会继续缩小，但一年后同样套餐能完成的工作仍会更多。" }
+  ],
+  "takeaways": [
+    "若主要写生产代码，优先购买 $200 Claude 套餐并以 Opus 5.5 为主力。",
+    "使用 Codex 订阅时改用 GPT-6.1 Soul，避免 Astra 和 Max 档位，以获得接近无限的体感额度。",
+    "比较模型时看每任务成本（如 Terminal Bench 的 cost per task），而不是订阅的美元等值。",
+    "不要在订阅里开 Ultrafast，它会在数小时内耗尽周额度。",
+    "可以让 Claude 调用 Codex/Soul 子代理来审查代码，OpenAI 模型的分析通常更彻底。"
+  ],
+  "tags": ["OpenAI", "Codex", "Anthropic", "订阅与定价", "GPT-6.1 Soul"],
+  "sponsor": "Browserbase；General Translation"
+}

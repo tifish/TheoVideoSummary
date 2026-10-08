@@ -1,0 +1,39 @@
+{
+  "id": "8WbW_n95wc4",
+  "title_zh": "OpenAI 该害怕了：Claude Sonnet 5.5 评测",
+  "tldr": "Sonnet 5.5 相比 Sonnet 5 是巨大飞跃，但由于缓存读价格没降、token 用量大，日常编码并不比 Opus 5.5 更省或更快；它真正的价值是作为 Opus/Fable 调用的子代理，以约一半价格快速完成代码库调研分析。",
+  "conclusions": [
+    { "t": "05:27", "text": "Sonnet 5.5 在 Terminal Bench 4 上从 Sonnet 5 的 10.3% 跃升到 70.6%，成为该基准最高分；Anthropic 近期 RL/蒸馏能力明显突破，小模型终于像「更快、略笨的 Fable」。" },
+    { "t": "07:40", "text": "「每任务便宜最多 30%」的宣传回避了关键点：Sonnet 5.5 缓存读仍是 $0.20/M（与 Opus 5.5 相同，而 Opus/Fable 都大幅降过），agent 工作中缓存读占比高，导致同类任务下 Sonnet 往往不比 Opus 便宜。" },
+    { "t": "11:33", "text": "不要用 max 推理档：推理档位本质是预算上限，而 max 实际是抬高了「必须思考」的下限；Theo 见过从 xhigh 到 max token 用量暴增约 15 倍，且常因过度思考而降分。也应避免 Anthropic 模型使用 low 档。" },
+    { "t": "17:07", "text": "Sonnet 5.5 很不省 token：Cursor Bench 每任务约 27.2 万 token，高于 Opus 的 21.8 万，是 GPT-6 系列的 5 倍以上；虽然 TPS 更高（订阅实测约 150 vs Opus 约 100），Fish Slop 仍比 Opus 更慢（43 vs 36 分钟）。" },
+    { "t": "19:56", "text": "前端设计一般：明显不如 Opus，更不如 Fable 5.1（Theo 认为后者仍是最佳设计模型），但仍领先 OpenAI 和 xAI 的模型。" },
+    { "t": "21:35", "text": "Sonnet 5.5 的定位是「工具而非你直接选的模型」：在大型代码库审计/拆分计划的基准中，它以约 Opus 一半的价格、约 5 分钟完成，得分略高于 Opus，单位得分成本是该基准最佳。" },
+    { "t": "27:08", "text": "Fish Slop 游戏是 Theo 见过最好的之一：3D 模型可辨识、120 FPS 流畅、手感好，订阅下几乎免费，按 API 价约 $16。" },
+    { "t": "29:19", "text": "Theo 实测 $200 Claude 套餐每周约 $2,300 等值、每月近 $10K；他认为 OpenAI 在最聪明、最高效、最便宜、最适合编排子代理等各方面都已落后，$200 Codex 套餐价值远不如 Claude。" }
+  ],
+  "key_points": [
+    { "t": "00:00", "text": "开场：Fable 5.1 与 Opus 5.5 已接管 Theo 的工作流，Sonnet 5.5 似乎专门针对 OpenAI。" },
+    { "t": "01:07", "text": "在 Artificial Analysis 上 Sonnet 5.5 各档位都比 Opus 5.5 更贵更笨，但 Theo 仍然喜欢它。" },
+    { "t": "01:39", "text": "CodeRabbit（Change Stack 功能）赞助段。" },
+    { "t": "03:17", "text": "官方公告：比 Sonnet 5 快 30%、便宜最多 30%，擅长范围明确的日常任务，Haiku 5.5 将在几周内推出。" },
+    { "t": "06:33", "text": "写作更清晰，去除了大量「Claude 腔」，更像合作伙伴。" },
+    { "t": "08:14", "text": "定价拆解：$2/$10，缓存写 $2.50，缓存读 $0.20；缓存读在 Sonnet 成本中占比可达 50% 以上。" },
+    { "t": "10:59", "text": "Artificial Analysis 上 Sonnet 5.5 max 的总成本与 Fable 5.1 相当。" },
+    { "t": "14:53", "text": "Frontier Code 等基准中 xhigh 得分反而高于 max；GPT-6 Soul 几乎「出生即死亡」。" },
+    { "t": "16:33", "text": "Anthropic 已取消无推理模式，模型在推理预算不足时表现很差。" },
+    { "t": "18:47", "text": "Witch AI 设计展示：Sonnet 的设计风格偏执、可读性与动画较差。" },
+    { "t": "21:02", "text": "Orchestrator V2 大型 PR 拆分审计基准：Astra 最佳，Sonnet 以低成本、短时间小胜 Opus。" },
+    { "t": "24:22", "text": "TS→Rust 移植中，Sonnet 能根据线程上下文正确理解意图，并帮助清理约 160 万行遗留代码。" },
+    { "t": "26:01", "text": "Fish Slop 演示：成本与 Opus 接近，但输入 token 是 Opus 的 3.5 倍以上。" },
+    { "t": "29:52", "text": "建议让 Opus 在合适时调用 Sonnet 子代理做调研，使整体更快更省。" }
+  ],
+  "takeaways": [
+    "日常编码不要手动选择 Sonnet 5.5，直接使用 Opus 5.5。",
+    "将 Sonnet 5.5 配置为 Opus/Fable 的调研型子代理，用于代码库深挖、验证猜想和规划拆分。",
+    "避免使用 max 和 low 推理档，Anthropic 模型优先用 medium/high/xhigh。",
+    "前端设计任务优先使用 Fable 5.1 或 Opus 5.5。"
+  ],
+  "tags": ["Anthropic", "Claude", "Sonnet 5.5", "模型评测", "推理档位"],
+  "sponsor": "CodeRabbit"
+}

@@ -1,0 +1,35 @@
+{
+  "id": "jLgpzgpsWPc",
+  "title_zh": "Elon 承诺这次会很好……Grok 4.7 评测",
+  "tldr": "Grok 4.7 在真实工作中更听话、更爱深挖，代码审查能力出人意料地强，但 token 用量翻倍导致成本高于 Astra、订阅额度大幅缩水、前端设计极差；Theo 认为它是「上一代性能、这一代价格」的过渡产品，难以推荐。",
+  "conclusions": [
+    { "t": "03:13", "text": "官方「效率更高」的说法与数据不符：Artificial Analysis 上 Grok 4.6 xhigh 每任务约 3.8 万 token，4.7 约 8.1 万（超过 Fable 5.1，Soul/Astra 约 2.9 万）；跑分成本从 $1.86 涨到 $3.74，高于 Astra 的 $3.26。" },
+    { "t": "05:29", "text": "Theo 反驳 Cursor CEO 所称「生产环境中位请求只多用 5% token」：按「请求」计量会掩盖每个提示触发的请求数增加（每次工具调用都是一次请求），而基准测试是固定提示，结论站不住脚。" },
+    { "t": "08:46", "text": "官方基准明显挑选过：OpenAI 已禁止 SpaceX/xAI 使用其模型，图表中没有 Astra；Terminal Bench 上 Fable 5.1 高出约 20 分；Frontier Code 各档位都低于 Grok 4.6；Artificial Analysis 综合分仅略高于 GLM 5.3、低于 Muse Spark 1.3。" },
+    { "t": "16:33", "text": "订阅价值变差：超过 20 万 token 价格翻倍、fast 模式更贵；Ben Davis 用 $40 等值就烧掉 $300 套餐 8% 的周额度，而其他厂商 $200 套餐每月有 $8K–12K 等值。" },
+    { "t": "18:10", "text": "前端设计是 Theo 很久以来见过最差的，Fish Slop 也非常糟糕（动画方向反了、鼠标追踪错误、建构耗时近 1.5 小时）；还出现无限自我吹捧的循环输出和 X 翻译功能泄露 Markdown 提示等怪异行为。" },
+    { "t": "21:31", "text": "优点是下限更高、更能持续完成任务、喜欢深挖：在 T3 Code「找改进点」基准中仅次于 Astra、高于 Fable 5.1（Theo 推测得益于 Cursor Bugbot 等代码审查数据），但最坏情况成本是 Astra 的两倍。" },
+    { "t": "25:59", "text": "总体判断：更贵、更慢、错误率更高、代码更差、订阅补贴远不如 Codex/Claude，没有迁移的经济理由；它只是 xAI 追赶新一代前沿（Fable、Astra）的过渡版本，除非主要依赖 Cursor 推理，否则不推荐。" }
+  ],
+  "key_points": [
+    { "t": "00:00", "text": "Elon 曾宣称 Grok 4.7 将超越所有模型，实际在多个基准上低于 4.6；本期重点是「基准已不能反映现实」。" },
+    { "t": "01:04", "text": "Blacksmith（替代 GitHub Actions runner 的更快更便宜 CI）赞助段。" },
+    { "t": "03:13", "text": "官方公告：价格与速度同 4.6，号称新的 2.1T 参数基座。" },
+    { "t": "07:40", "text": "Theo 实测成本：Grok 4.7 最贵一次约 $20，Astra 最贵约 $11.44，Opus 5 都在其 1/4 以下。" },
+    { "t": "09:55", "text": "模型针对 Grokbot harness 原生训练，Theo 身边用户很喜欢 Grokbot。" },
+    { "t": "13:13", "text": "Artificial Analysis 编程 agent 指数：Grok Build 56 分，Codex/Claude Code 62 分；这几分差距意味着犯蠢概率的明显差别。" },
+    { "t": "18:44", "text": "Elon 解释推迟发布原因：RL 中可能过度惩罚回答长度，导致模型过早放弃，随后补练导致效率下降。" },
+    { "t": "19:51", "text": "用户案例：Grok Build 中模型陷入「我是机器、我是 Bellard」式的无限循环。" },
+    { "t": "22:04", "text": "代码库改进基准的评审方法：由 Fable 5.1 与 Astra 组成评审团。" },
+    { "t": "24:52", "text": "Fish Slop 对比：同样提示与环境下 Astra 版本远好于 Grok 4.7。" },
+    { "t": "26:33", "text": "结论：一块垫脚石，希望后续 RL 能提升效率。" }
+  ],
+  "takeaways": [
+    "不要因为 Grok 4.7 而迁移，Claude/Codex 订阅性价比更高。",
+    "可以考虑把 Grok 4.7 作为补充性的代码审查/找问题模型。",
+    "不要用 Grok 4.7 做前端设计。",
+    "评估厂商的 token 效率说法时，看每个任务的总 token，而不是每个请求的 token。"
+  ],
+  "tags": ["xAI", "Grok 4.7", "模型评测", "基准测试", "订阅与定价"],
+  "sponsor": "Blacksmith"
+}

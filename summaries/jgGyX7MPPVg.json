@@ -1,0 +1,41 @@
+{
+  "id": "jgGyX7MPPVg",
+  "title_zh": "我的新宠模型：Claude Opus 5.5 首发评测",
+  "tldr": "Opus 5.5 在大多数工作上达到 Fable 5.1 水平、比 Opus 5 便宜约 40%，写作清晰度大幅改善，在 $200 Claude 订阅中性价比极高；但它很耗 token、max 档有害、设计品味仍逊于 Fable，偶尔有「小模型式」的怪癖。",
+  "conclusions": [
+    { "t": "04:28", "text": "定价：$4/$20（下降 20%），缓存读降 60% 至 $0.20/M，速度约快 30%，典型负载下比 Opus 5 便宜约 40%；可在会话中途切换推理档位而不破坏缓存。" },
+    { "t": "06:07", "text": "基准表现极强：Terminal Bench 4 上 Opus 5.5 medium（$2.94）就超过 Fable 5.1 max（$20）；Artificial Analysis 智能指数领先 Fable 5.1 约 5 分，并占据 50 分以上区间的帕累托前沿。" },
+    { "t": "08:53", "text": "最大改进是沟通：去掉了 Opus 5 满篇 em dash 的「Claude slop」，重点前置、清晰易读，Theo 已删除 CLAUDE.md 中的「反 slop」规则。" },
+    { "t": "10:01", "text": "Opus 支持零数据保留（ZDR）而 Fable/Mythos 不支持，因此企业只能大规模启用 Opus——Theo 预计 Opus 5.5 将迅速成为最流行的编程模型。" },
+    { "t": "13:50", "text": "便宜不是因为高效：max 档每任务约 12 万 token（Opus 5 为 7.3 万，Astra 仅 2.7 万，相差约 4 倍）；在 Artificial Analysis 上 medium 每任务仅 $1.34，xhigh 接近 Astra，max 约 $6。" },
+    { "t": "17:41", "text": "不要用 max：Skate Bench 中 xhigh→max 推理 token 从约 330 增至约 5,000（超 10 倍），分数仅涨 1%；Theo 一个 max 线程写 Markdown 计划循环了 6.5 小时。low 也不推荐，medium/high/xhigh 都很好。" },
+    { "t": "19:19", "text": "订阅额度非常耐用：重度使用一整天仅消耗约 20% 周额度，一个完整的「找 bug → 修复 → 验证 → 合并 PR」流程只用 1%；在 $200 套餐价值上远超 Codex。" },
+    { "t": "24:14", "text": "弱项：深度代码审查不如 OpenAI 前沿模型（但比 Opus 5 准确率近乎翻倍）；默认前端设计偏模板化，Fable 5.1 仍是设计最佳；3D/游戏能力（Three.js）惊人，Fish Slop 是 Theo 第一个想继续玩的版本。" },
+    { "t": "33:20", "text": "怪癖：对上下文窗口有「焦虑」，会担心离自动压缩只差 10%、「崩溃会丢失工作」等不合理问题；整体犯蠢尖刺比 Opus 5 少很多，但比 Fable 略低，长任务中仍需留意。" }
+  ],
+  "key_points": [
+    { "t": "00:00", "text": "回顾：Opus 4.5（2025 年 11 月）改变了 AI 编程方式，此后 Opus 5、Sonnet 5 令人失望。" },
+    { "t": "01:41", "text": "WorkOS 赞助段（agent 认证标准）。" },
+    { "t": "03:21", "text": "两天内四款模型发布：Grok 4.7、Opus 5.5、GPT-6 Soul 与 Luna；官方称有测试者一天内完成 68 万行代码迁移。" },
+    { "t": "05:35", "text": "Sonnet 5.5 与 Haiku 5.5 将在几周内推出（Haiku 一年未更新）。" },
+    { "t": "07:14", "text": "Cursor Bench：OpenAI 已禁止 Cursor 使用其模型；Theo 用 Opus 5.5 自制了更好的基准可视化工具。" },
+    { "t": "11:06", "text": "Anthropic 员工公开承认 Opus 5 失误，公司对员工对外发言的限制明显放松。" },
+    { "t": "12:12", "text": "社区演示预告：Opus 5.5 制作的 Dark Souls 克隆。" },
+    { "t": "16:03", "text": "可视化中顺带提到小米 MiMo V2.6 开源模型性价比突出，Grok 4.6/4.7 已无竞争力。" },
+    { "t": "20:58", "text": "代码库改进审计基准：Grok 4.7 和 Soul 审查能力强，Opus/Fable 较弱。" },
+    { "t": "23:08", "text": "Parallel 赞助段。" },
+    { "t": "24:48", "text": "设计对比：官方设计技能产出偏 Tailwind 模板；Mia 的 100 次 HTML 生成测试则给出很高评价。" },
+    { "t": "27:05", "text": "社区演示：T3 Code 移植进 Minecraft、Dark Souls 克隆、飞行模拟、无引擎 C++ 滑板游戏、Three.js FPS。" },
+    { "t": "30:23", "text": "Fish Slop：medium 首版已很流畅（120 FPS），xhigh 精修后效果惊艳。" },
+    { "t": "36:36", "text": "早期 PR 数据：严重问题率与 Fable 相近或更低，小问题略多。" },
+    { "t": "38:14", "text": "5 小时额度上调；Anthropic 在后训练上追上了 OpenAI。" }
+  ],
+  "takeaways": [
+    "将 Opus 5.5 作为日常默认编码模型，推理档位用 medium/high/xhigh，避免 low 和 max。",
+    "营销页或大规模设计改版仍可考虑使用 Fable 5.1。",
+    "深度代码审查时搭配 OpenAI 模型或 Grok 4.7。",
+    "受限于 ZDR 只能用 Opus 的公司，现在可以放心升级到 Opus 5.5。"
+  ],
+  "tags": ["Anthropic", "Claude", "Opus 5.5", "模型评测", "推理档位"],
+  "sponsor": "WorkOS；Parallel"
+}
