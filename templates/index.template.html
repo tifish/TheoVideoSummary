@@ -55,7 +55,18 @@
   .actions { margin-top: 14px; font-size: 13px; display: flex; gap: 16px; color: var(--muted); }
   .empty { text-align: center; color: var(--muted); padding: 60px 0; }
   mark { background: #fde68a; color: inherit; border-radius: 2px; }
-  @media (max-width: 640px) { .row { flex-direction: column; } .thumb { width: 100%; } }
+  @media (max-width: 640px) {
+    .row { flex-direction: column; } .thumb { width: 100%; }
+    /* 手机上压缩顶栏：标签单行横向滚动 */
+    .top { padding: 8px 0 6px; gap: 8px; }
+    h1 { font-size: 16px; }
+    .meta { font-size: 12px; }
+    .controls { padding-bottom: 6px; }
+    input[type=search] { padding: 6px 10px; }
+    .tags { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 8px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+    .tags::-webkit-scrollbar { display: none; }
+    .tags .chip { flex: none; white-space: nowrap; }
+  }
 </style>
 </head>
 <body>
