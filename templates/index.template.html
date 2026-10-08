@@ -76,7 +76,6 @@
 <script>
 const DATA = /*__DATA__*/null;
 
-const LOCAL = location.protocol === "file:"; // 字幕原文不发布，只在本地打开时显示链接
 const $ = (s) =>document.querySelector(s);
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const fmtDate = (d) => d ? `${d.slice(0,4)}-${d.slice(4,6)}-${d.slice(6,8)}` : "";
@@ -122,7 +121,6 @@ function card(v) {
       ${take}
       <div class="actions">
         <a href="${esc(v.url)}" target="_blank" rel="noopener">▶ 在 YouTube 观看</a>
-        ${LOCAL ? `<a href="transcripts/${esc(v.id)}.txt" target="_blank">字幕原文</a>` : ""}
         <a href="#${esc(v.id)}">链接到此</a>
         ${v.sponsor ? `<span>赞助：${esc(v.sponsor)}</span>` : ""}
       </div>
