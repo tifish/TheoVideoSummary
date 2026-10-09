@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import json
 import os
+import random
 import socket
 import subprocess
 import urllib.request
@@ -26,6 +27,9 @@ ROOT = Path(__file__).resolve().parent
 PROFILE_DIR = ROOT / ".browser-profile"
 # 本机 Edge 有 UserDataDir 组策略，无法启动独立配置，所以用 Chrome
 CAPTION_TIMEOUT = 90  # 秒；等待播放器发出字幕请求（含片头广告）
+# 模拟真人观看节奏：打开后先看一会儿再开字幕，拿到字幕后继续播放一段时间再关闭
+BEFORE_CAPTIONS = (2, 5)  # 秒
+KEEP_WATCHING = (20, 60)  # 秒
 
 # 在页面中执行：静音播放、跳过广告、开启英文字幕轨
 _DRIVE_PLAYER_JS = """(lang) => {
@@ -198,8 +202,14 @@ class BrowserSession:
         self._close_page()
         page = self._context().new_page()
         hits = self._hits = []
-        page.on("response", lambda r: hits.append(r)
-                if "/api/timedtext" in r.url and "tlang=" not in r.url else None)
+        def on_response(r) -> None:
+            # 只收本视频的字幕：片头广告的字幕也走同一个接口；tlang= 是机器翻译
+            if "/api/timedtext" in r.url:
+                q = parse_qs(urlparse(r.url).query)
+                if q.get("v") == [video_id] and "tlang" not in q:
+                    hits.append(r)
+
+        page.on("response", on_response)
         self._page, self._page_vid = page, video_id
         page.goto(f"https://www.youtube.com/watch?v={video_id}", wait_until="domcontentloaded", timeout=60000)
         page.wait_for_selector("#movie_player", timeout=60000)
@@ -239,6 +249,8 @@ class BrowserSession:
             if not lang:
                 raise RuntimeError("no English caption track")
 
+            page.evaluate("() => { const p = document.querySelector('#movie_player'); p?.mute?.(); p?.playVideo?.(); }")
+            page.wait_for_timeout(random.uniform(*BEFORE_CAPTIONS) * 1000)
             deadline = time.time() + CAPTION_TIMEOUT
             while not hits and time.time() < deadline:
                 page.evaluate(_DRIVE_PLAYER_JS, lang)
@@ -256,7 +268,7 @@ class BrowserSession:
                 # 已登录、带 PO Token 仍返回 200 空内容：字幕接口被 YouTube 限制
                 raise RuntimeError("EMPTY_CAPTIONS: timedtext returned 200 with empty body (rate-limited)")
             try:
-                return json.loads(body)
+                data = json.loads(body)
             except ValueError:
                 # 播放器用的不是 json3 格式时，用同一会话（同 cookies / PO Token）改格式再取一次
                 u = urlparse(resp.url)
@@ -265,6 +277,8 @@ class BrowserSession:
                 r = ctx.request.get(urlunparse(u._replace(query=urlencode(q, doseq=True))))
                 if r.status != 200:
                     raise RuntimeError(f"timedtext HTTP {r.status}")
-                return r.json()
+                data = r.json()
+            page.wait_for_timeout(random.uniform(*KEEP_WATCHING) * 1000)
+            return data
         finally:
             self._close_page()
