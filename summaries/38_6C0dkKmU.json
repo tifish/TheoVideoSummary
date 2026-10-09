@@ -1,0 +1,42 @@
+{
+  "id": "38_6C0dkKmU",
+  "title_zh": "终于有了好用的小模型：Haiku 5.5 评测",
+  "tldr": "Theo 认为 Haiku 5.5 终于让 Anthropic 有了“有时值得用”的小模型：价格大降、速度快、跑分翻倍，最适合作为 Opus 的子 agent 做检索、分类和批量尝试，但他不会用它直接写代码。",
+  "conclusions": [
+    { "t": "00:33", "text": "Theo 此前判断 Haiku 4.5 既贵又没用，甚至在 Claude MD 里禁止 agent 调用；他认为 Haiku 5.5 发布后已没有任何理由再用 Haiku 4.5。" },
+    { "t": "06:02", "text": "Haiku 5.5 定价（100k 上下文以内）：缓存读 $0.01/M、缓存写 $0.125/M、输入 $0.10/M、输出 $0.50/M，输出和输入约为 Sonnet 5.5 的 1/20；同时 Sonnet 5.5 缓存读从 $0.20 降到 $0.10，与 GPT-6.1 Soul 持平，Theo 认为这让整条产品线更合理。" },
+    { "t": "07:10", "text": "超过 100k token 上下文后 Haiku 5.5 价格变为 5 倍（输出 $2.50/M），Theo 认为这是刻意引导其用于短小快速任务，并防止在 Claude Code 中被滥用；可按 Anthropic 员工建议将 Haiku 的 auto compact 窗口设为 100k 来控制成本。" },
+    { "t": "10:30", "text": "关闭推理时 Haiku 5.5 表现不佳（Prime 实测通过率低于 GPT-6 Luna 且更慢）；Theo 认为 Anthropic 模型不擅长无推理模式，纯分类任务若关推理不如用更便宜的方案或 Luna。" },
+    { "t": "16:38", "text": "按 Artificial Analysis 数据的性价比 Pareto 线，GPT-6 Luna、GPT-6.1 Soul、Opus 5.5 的组合仍略优于 Haiku；但 Haiku 5.5 已与 Luna 不相上下，只用 Anthropic 一家时 Opus + Haiku 就足够，Sonnet 5.5 几乎可以完全跳过，Sonnet 5.5 Max（$7.60/任务）完全不值得用。" },
+    { "t": "22:44", "text": "Anthropic 的鸡蛋掉落演示中，Opus 5.5 单独完成耗时 3.5 分钟、25 次尝试、$0.47；Opus 5.5 + 10 个 Haiku 子 agent 不到 1 分钟、86 次尝试、仅 $0.14。Theo 认为在“多次尝试比聪明尝试更有价值”的任务上 Haiku 5.5 会大胜。" },
+    { "t": "31:38", "text": "Theo 不会用 Haiku 写代码：写代码本身很便宜，昂贵的是收集上下文、验证和反复重试；小模型失败时可能烧掉比 Opus 更多的 token。实测 Haiku 审查 PR 时撞上 GitHub 限流并把自己困住，而 Opus 会主动规划绕开。" },
+    { "t": "38:50", "text": "Theo 的推荐组合：Opus 写代码、GPT-6.1 Soul 作为不同视角的代码审计者，Haiku 5.5 负责数据收集、大量阅读和分类，由 Opus 自行决定何时调用。" }
+  ],
+  "key_points": [
+    { "t": "00:00", "text": "开场：Anthropic 擅长大模型但小模型一直很弱，Haiku 4.5 发布时就贵、如今更显可笑。" },
+    { "t": "01:06", "text": "Anthropic 过去把精力集中在最大模型上再粗糙蒸馏，Opus 5.5 和 Sonnet 5.5 打破了这一诅咒，Haiku 5.5 补齐最后一块。" },
+    { "t": "02:14", "text": "赞助商段落。" },
+    { "t": "03:50", "text": "官方公告：Haiku 5.5 面向高频、成本敏感任务（摘要、压缩、分类、子 agent、客服、浏览器操作），平均比 4.5 便宜约 75%。" },
+    { "t": "05:29", "text": "定价细节：Sonnet 5.5 缓存读减半，Haiku 5.5 各项价格大幅下降，但超过 100k 上下文价格翻 5 倍。" },
+    { "t": "08:52", "text": "基准测试：大多数项目得分超过 Haiku 4.5 的两倍，Terminal Bench 从 0 升到近 40%（GPT-6 Luna 为 16.4%），computer use 也明显强于 Luna；速度 100–200 TPS。" },
+    { "t": "11:35", "text": "Theo 用 Claude Code 订阅实测约 180 TPS；在其基准站点上对比每任务 token 数与成本，指出 max 推理档位极度浪费。" },
+    { "t": "13:16", "text": "成本 vs 智能图与 Pareto 线：加入 Gemini、Grok 4.7、Astra、Luna、GPT-6.1 Soul 后逐一比较，并提到被低估的开源模型 Mimo V26 Pro。" },
+    { "t": "18:52", "text": "Artificial Analysis 更新数据后 Sonnet 5.5 因缓存降价左移，但在 Pareto 线上提升有限。" },
+    { "t": "19:25", "text": "附带公告：20x 订阅用户每月获 $200 API 额度，5x 用户 $100；Claude Python/TypeScript SDK 将支持 computer use 与 browser use。" },
+    { "t": "21:37", "text": "最佳用途是让 agent 和应用调用 Haiku，而非在 UI 里直接选它；展示 Opus + 10 个 Haiku 子 agent 的鸡蛋掉落演示。" },
+    { "t": "24:24", "text": "社区 demo：Haiku 用约 $0.60 生成高质量视频；前端设计在开启 Claude 设计技能时明显更好，远胜 Grok 4.7。" },
+    { "t": "27:46", "text": "实测：用 Haiku 审查 T3 Code 约 1,500 个 PR；Fish Slop 游戏构建花费约 $1，存在鼠标移动缺失等问题，51 个请求中 47 个超过 100k 上下文走高价档。" },
+    { "t": "33:51", "text": "Haiku 审查 PR 时触发 GitHub 限流后停滞；改由 Opus 编排、Haiku 做子 agent，Opus 主动规划约 100 个子 agent 并绕开限流。" },
+    { "t": "36:35", "text": "价格差距并没有想象中大：Opus 低档约 $0.55/任务 vs Haiku max 约 $0.20；Theo 建议 Anthropic 用户只用 Opus + Haiku。" },
+    { "t": "39:55", "text": "结语：Anthropic 现在有了一个“有时值得用”的小模型；期待 Fable 5.5，并认为 Anthropic 整体领先，OpenAI 应感到压力。" }
+  ],
+  "takeaways": [
+    "在 Claude Code 中把 Haiku 5.5 的 auto compact 窗口设为 100k，避免子 agent 落入 5 倍价格档。",
+    "不要在无推理模式下使用 Haiku 5.5；需要关推理的纯分类任务考虑其他更便宜的模型。",
+    "让 Opus 编排、Haiku 5.5 作为子 agent 处理检索、分类、批量尝试等可验证任务，而不是让 Haiku 直接写主要代码。",
+    "避免使用 Sonnet 5.5 的 max 推理档位，性价比极低。",
+    "用 Claude 写前端时启用 Claude 设计技能，可显著提升小模型的设计质量。"
+  ],
+  "tags": ["Anthropic", "Claude", "Haiku 5.5", "模型评测", "订阅与定价", "基准测试"],
+  "sponsor": "CodeRabbit"
+}

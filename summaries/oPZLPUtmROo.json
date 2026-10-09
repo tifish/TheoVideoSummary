@@ -1,0 +1,43 @@
+{
+  "id": "oPZLPUtmROo",
+  "title_zh": "AI 杀死了 React Native 吗？——解读 Shopify 回归原生",
+  "tldr": "Shopify 以「编码 agent 让双平台原生开发不再昂贵」为由从 React Native 回到 Swift/Kotlin；Theo 认为他们忽视了 OTA 更新和 Expo 等核心优势、迁移方案过度工程化，但也承认 agent 确实缩小了 React Native 原本依赖的「Meta 原生工程师水平差距」，加上 Meta 正在缩减 React/React Native 团队，React Native 的长期前景值得担忧。",
+  "conclusions": [
+    { "t": "04:55", "text": "Theo 认为 Shopify 的文章过度强调「多平台只写一次」这一点，而这从来不是 React Native 最大的优势；他眼中的核心价值是「learn once, understand everywhere」以及 OTA 更新。" },
+    { "t": "15:51", "text": "Theo 判断 OTA（over-the-air）更新是很难放弃 React Native 的最大理由：原生应用修 bug 要过 App Store 审核且用户更新缓慢（他在 Twitch 看到任意时刻半数以上用户落后至少两个版本，自己手机上有 54 个应用待更新），而 React Native 只需重新下发 JS bundle。" },
+    { "t": "22:30", "text": "Theo 认为 Shopify 没有深度采用 Expo 是一个重大失误：Expo 提供构建、OTA、开发客户端、模拟器和 web 支持，不用 Expo 就等于在自己重造 Expo（Infinite Red 的 Jamon 也持同样看法）。" },
+    { "t": "26:22", "text": "Shopify 的 Shop 应用改为原生后安装包反而大了约 1MB；Theo 认为 React Native 运行时并不大（默认 Expo 应用约 20–30MB），包体积和性能差异多来自「重写带来的第二系统收益」而非框架本身。" },
+    { "t": "13:37", "text": "Theo 批评 Shopify 的迁移方案（Helix 分检查点 + 两轮对抗式代码审查 + 人工确认，以及为 agent 做无头业务逻辑 CLI）严重过度工程化，认为这些本质是 CRUD 应用，用 Expo 的 web/模拟器支持即可让 agent 高效迭代。" },
+    { "t": "32:57", "text": "Theo 指出 Shopify 在决定是否迁移到 React Native 新架构时直接选择了原生重写，因此其启动时间等性能对比是基于旧架构，参考价值有限；他推测新架构与原生的差距会更小。" },
+    { "t": "48:23", "text": "Theo 用自己的经验反驳 Shopify「直接让 LLM 移植行不通」的说法：他用 GPT-6.1 Soul（及少量 Astra）在单个线程里把 T3 Code 的 React Native 应用移植成 SwiftUI 版并持续同步新功能，自己没读过一行代码却每天在用；他猜 Shopify 是过度使用 Claude 模型或旧模型。" },
+    { "t": "55:40", "text": "Theo 认为 React Native 过去的真正价值在于 Meta 拥有比绝大多数团队更强的原生工程师（React Native 团队巅峰时 300+ 人，对比 React 核心不到 30 人）；如今 Codex 等 agent 也擅长原生代码，这一差距大幅缩小，这是他最难接受的变化。" },
+    { "t": "57:19", "text": "Theo 担忧 Meta 正在解散 React/React Native 团队，核心人才（如 React Compiler 的 Lauren）流失到 Cursor 等公司，React Native 的维护质量和演进速度将进入平台期，这是值得认真关注的风险。" }
+  ],
+  "key_points": [
+    { "t": "00:00", "text": "开场回顾：Theo 曾为 React Native 辩护（Airbnb 文章），而 Shopify 曾是 React Native 的标杆案例，如今宣布回归原生。" },
+    { "t": "03:48", "text": "解读 Shopify 文章：2020 年押注 React Native 很成功，但 LLM 让 Swift/Kotlin 双平台开发成本大降，因此从第一性原理重新评估。" },
+    { "t": "07:06", "text": "Shopify 用 LLM 原型重写核心模块，agent 可以参照 iOS 实现 Android 版本，并通过共享规格、测试和审查维持双平台一致。" },
+    { "t": "08:12", "text": "开源库安排：React Native Skia 由 William 分叉以新名称继续维护，FlashList 寻找长期接管方，Restyle 归档。" },
+    { "t": "10:21", "text": "迁移策略选择 greenfield 重写：Shop 应用 12 周完成从原型到上架，拥有 300 个页面的 Shopify 应用迁移在进行中；Theo 赞赏大公司公开承认 LLM 能做大规模重写。" },
+    { "t": "11:59", "text": "Shopify 的 Helix 迁移系统与为 agent 构建的无头 CLI 测试架构，Theo 逐条吐槽其过度工程化，并指出移动端模拟器对 agent 极不友好。" },
+    { "t": "15:51", "text": "React Native 被低估的优势：OTA 更新。Theo 用 iPhone mini 显示 bug、节日主题等例子说明原生发布流程的痛点，并用「两个厨师」比喻解释 React Native 是给原生层下发指令的层。" },
+    { "t": "22:30", "text": "Expo 的作用：云构建、OTA、开发客户端（扫码即可开发），对比 Theo 自己做原生 T3 Code 时被 Apple 签名和权限折磨的经历。" },
+    { "t": "25:16", "text": "React Native 的真实缺点：Xcode/CocoaPods 依赖管理之痛、foot gun 多（普通 React Native 开发者平均水平低于原生开发者）、架构频繁变动导致升级困难、依赖 Meta 跟进新平台特性；包体积和性能不在其列。" },
+    { "t": "31:17", "text": "Shopify 的特殊性：未采用新架构就做对比、未使用 Expo；以及关于 Toby 独断决策的传闻和他本人的回应，Theo 读完后转而认同其「founder mode as a service」做法。" },
+    { "t": "38:25", "text": "Theo 的亲身移植经历：用 Soul 在 Mac mini 上 2–3 小时内自动生成 UIKit 版和 SwiftUI 版 T3 Code 应用，后台数据保持更好，但 SwiftUI 列表滚动明显更差。" },
+    { "t": "42:18", "text": "返回手势的坑：SwiftUI 原生导航栈只允许屏幕左侧约四分之一区域触发返回且不可调整，而 iOS 设置等系统应用自身支持从中间滑动返回，Theo 只好重建导航层。" },
+    { "t": "46:43", "text": "赞助段落（Convex）。" },
+    { "t": "51:12", "text": "引用 Legend List/Legend State 作者 Jay 的观点：在他的基准对比中 React Native 比原生更快，Legend List 纯 JS 实现甚至能移植到 web。" },
+    { "t": "52:53", "text": "React Native 团队的历史与现状：曾远大于 React 核心团队、聚集最好的原生工程师；如今 Meta 缩编，人才流失，团队士气低落。" },
+    { "t": "59:31", "text": "总结：Shopify 的转向是值得观察的大胆实验；React Native 从来不是「一次编写到处运行」，而是「一次学习到处理解」；无论用什么技术，团队都应有人日常使用 Android 手机。" }
+  ],
+  "takeaways": [
+    "如果使用 React Native，尽量采用 Expo，以获得 OTA 更新、云构建和便捷的开发客户端，避免自己重造工具链。",
+    "评估 React Native 与原生的性能差异时，应基于新架构进行对比，并区分「框架差异」与「重写带来的收益」。",
+    "让 agent 移植移动应用时，给它模拟器、现有源码和清晰的参考实现，并以循环方式让它自行测试和修正，而非一次性生成。",
+    "使用 SwiftUI 原生导航栈时注意返回手势只在屏幕左侧生效，需要时自行实现导航层以匹配用户习惯。",
+    "团队中安排人日常使用 Android（以及让 Android 用户体验 iPhone），在两个平台上真实测试应用。"
+  ],
+  "tags": ["React Native", "Shopify", "移动开发", "行业观察", "开发工作流"],
+  "sponsor": "Greptile、Convex"
+}
