@@ -106,6 +106,7 @@ python -c "import json,glob,collections;c=collections.Counter(t for f in glob.gl
 | `fetch.py` | 列出频道新视频、下载字幕，维护 `data/videos.json` |
 | `browser_transcript.py` | 用已登录的真实 Chrome 打开视频、开启字幕并截获字幕数据（`fetch.py` 优先使用） |
 | `build.py` | 校验 `summaries/*.json` 并生成 `index.html` |
+| `next_run.py` | 随机生成下一次定时运行时间（06:30–08:00，排除当天），供定时任务结束时重新排期 |
 | `templates/index.template.html` | 索引页模板（数据由 build.py 内嵌） |
 | `data/videos.json` | 视频元数据与状态，**不要手工删除** |
 | `transcripts/<id>.txt` | 字幕原文 |
