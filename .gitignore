@@ -1,3 +1,4 @@
 transcripts/
 __pycache__/
 *.tmp
+.browser-profile/

@@ -16,6 +16,7 @@
    - 输出末尾的 `PENDING_SUMMARIES` 列表就是本轮要总结的视频（字幕已下载、但还没有总结）。
    - 只想看待办、不联网：`python fetch.py --status`。
    - 出现 `No supported JavaScript runtime` 警告可以忽略。
+   - 字幕优先用真实 Chrome（专用配置 `.browser-profile/`，已登录 YouTube 小号）获取：运行时会弹出 Chrome 窗口，属正常现象，不要关闭。日志出现 `browser profile is not logged in` 时，在汇报中提醒用户运行 `python fetch.py --login` 重新登录。
    - 输出 `TRANSCRIPT_BLOCKED` 表示 YouTube 限流了本机 IP 的字幕请求：脚本已自动停止本轮字幕抓取且不计入失败次数，**不要**反复重试，在汇报中说明即可，下次运行会自动重试。
 
 2. **逐个总结**：对每个待总结视频
@@ -103,6 +104,7 @@ python -c "import json,glob,collections;c=collections.Counter(t for f in glob.gl
 | 路径 | 说明 |
 |---|---|
 | `fetch.py` | 列出频道新视频、下载字幕，维护 `data/videos.json` |
+| `browser_transcript.py` | 用已登录的真实 Chrome 打开视频、开启字幕并截获字幕数据（`fetch.py` 优先使用） |
 | `build.py` | 校验 `summaries/*.json` 并生成 `index.html` |
 | `templates/index.template.html` | 索引页模板（数据由 build.py 内嵌） |
 | `data/videos.json` | 视频元数据与状态，**不要手工删除** |
@@ -110,7 +112,7 @@ python -c "import json,glob,collections;c=collections.Counter(t for f in glob.gl
 | `summaries/<id>.json` | 总结（agent 写入） |
 | `index.html` | 生成的索引页 |
 
-依赖：Python 3.10+，`pip install -U yt-dlp youtube-transcript-api`（YouTube 变更后抓取失败时，先升级这两个包）。
+依赖：Python 3.10+，`pip install -U yt-dlp youtube-transcript-api playwright`（YouTube 变更后抓取失败时，先升级这些包），以及本机安装的 Google Chrome。首次使用运行 `python fetch.py --login` 登录 YouTube 小号。
 
 重新总结某个视频：删除 `summaries/<id>.json` 后重新跑流程即可。
 字幕连续失败 5 次（被限流不计入）的视频会被跳过；要重试，把 `data/videos.json` 中该视频的 `transcript_attempts` 改为 0。
