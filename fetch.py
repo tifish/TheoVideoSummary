@@ -166,7 +166,8 @@ def fetch_transcript(video_id: str, info: dict | None, browser: BrowserSession |
         if is_blocked(e):  # 被封时不再用 yt-dlp 重复请求，避免封得更久
             raise Blocked(" | ".join(errors)) from e
     try:
-        info = info or video_details(video_id)
+        if not (info and "automatic_captions" in info):  # 浏览器读取的详情不含字幕地址
+            info = video_details(video_id)
         return to_paragraphs(snippets_via_ytdlp(info))
     except Exception as e:  # noqa: BLE001
         errors.append(f"yt-dlp: {describe(e)}")
@@ -186,6 +187,9 @@ def sync(limit: int) -> None:
     log(f"Listing latest {limit} videos from {CHANNEL_URL} ...")
     entries = list_channel(limit)
     log(f"  got {len(entries)} entries")
+    # 已登记但还没拿到字幕、且已不在最新列表里的视频，也继续重试
+    listed = {e["id"] for e in entries}
+    entries += [{"id": vid} for vid, v in videos.items() if not v.get("transcript") and vid not in listed]
 
     blocked = False
     # 已登录的专用 Chrome 配置优先；窗口在第一次需要抓字幕时才打开
@@ -203,7 +207,8 @@ def sync(limit: int) -> None:
             if i:
                 time.sleep(random.uniform(*REQUEST_DELAY))
             try:
-                info = video_details(vid)
+                # 已登录的浏览器优先：匿名的 yt-dlp 在被人机验证拦截的 IP 上读不到详情
+                info = browser.details(vid) if browser is not None else video_details(vid)
             except Exception as ex:  # noqa: BLE001  (直播预告/会员视频等)
                 log(f"  skip: cannot read details: {str(ex).splitlines()[0][:200]}")
                 continue
