@@ -129,7 +129,77 @@
       "transcript": "transcripts/jLgpzgpsWPc.txt",
       "transcript_attempts": 0,
       "added_at": "2026-10-08T13:26:57+00:00"
+    },
+    "-XWSJM-Ue-o": {
+      "id": "-XWSJM-Ue-o",
+      "title": "So I was using Fable wrong...",
+      "url": "https://www.youtube.com/watch?v=-XWSJM-Ue-o",
+      "upload_date": "20260922",
+      "published": "2026-09-22T10:42:31+00:00",
+      "duration": 2492,
+      "thumbnail": "https://i.ytimg.com/vi/-XWSJM-Ue-o/mqdefault.jpg",
+      "description": "It's time to start prompting better and make Fable 5.1 as good as we can, so you don't have drops in performance\n\nThank you Sentry & General Translation for sponsoring!\nSentry: https://soydev.link/sentry\nGeneral Translation: https://soydev.link/gt\n\nWant to sponsor a video? Learn more here: https://soydev.link/sponsor-me\n\nCheck out my Twitch, Twitter, Discord more at https://t3.gg\n\nS/O @Ph4seon3 for the awesome edit 🙏\n\n#ai #programming #coding #fable",
+      "transcript": null,
+      "transcript_attempts": 0,
+      "added_at": "2026-10-08T23:00:16+00:00",
+      "transcript_error": "transcript-api: IpBlocked:  | yt-dlp: HTTPError: HTTP Error 429: Too Many Requests"
+    },
+    "F3YXg7AaKWE": {
+      "id": "F3YXg7AaKWE",
+      "title": "Jev is incredible",
+      "url": "https://www.youtube.com/watch?v=F3YXg7AaKWE",
+      "upload_date": "20260921",
+      "published": "2026-09-21T00:28:21+00:00",
+      "duration": 1829,
+      "thumbnail": "https://i.ytimg.com/vi/F3YXg7AaKWE/mqdefault.jpg",
+      "description": "Jev is a brand new Typesafe model that's a fast classifier with tons of perks and safety, but it doesn't replace reasoning models like Astra/Fable.\n\nThank you Depot for sponsoring! Check them out at: https://soydev.link/depot\n\nSources:\nhttps://typesafe.ai/blog/introducing-system-one-models-and-jev\nhttps://flaviocopes.com/jev/\n\nWant to sponsor a video? Learn more here: https://soydev.link/sponsor-me\n\nCheck out my Twitch, Twitter, Discord more at https://t3.gg\n\nS/O @Ph4seon3 for the awesome edit 🙏\n\n#jev #ai #programming #coding",
+      "transcript": null,
+      "transcript_attempts": 0,
+      "added_at": "2026-10-08T23:00:23+00:00",
+      "transcript_error": "transcript-api: IpBlocked:  | yt-dlp: HTTPError: HTTP Error 429: Too Many Requests"
+    },
+    "iBrAWpjXNxs": {
+      "id": "iBrAWpjXNxs",
+      "title": "Please stop using stupid models",
+      "url": "https://www.youtube.com/watch?v=iBrAWpjXNxs",
+      "upload_date": "20260918",
+      "published": "2026-09-18T00:58:48+00:00",
+      "duration": 1629,
+      "thumbnail": "https://i.ytimg.com/vi/iBrAWpjXNxs/mqdefault.jpg",
+      "description": "The Best AI Models aren't actually better because they're smarter, they're better because they do the dumb things right more often. \n\nThank you to Greptile for Sponsoring: https://soydev.link/greptile\n\nSources:\nhttps://x.com/DavidKPiano/status/2097359998972019070\nhttps://x.com/zeeg/status/2098064539170623954\nhttps://x.com/thdxr/status/2098279329419415702\n\nWant to sponsor a video? Learn more here: https://soydev.link/sponsor-me\n\nCheck out my Twitch, Twitter, Discord more at https://t3.gg\n\nS/O @Ph4seon3 for the awesome edit 🙏\n\n#ai #models #coding #programming",
+      "transcript": null,
+      "transcript_attempts": 0,
+      "added_at": "2026-10-08T23:00:30+00:00",
+      "transcript_error": "transcript-api: IpBlocked:  | yt-dlp: HTTPError: HTTP Error 429: Too Many Requests"
+    },
+    "NvVbCqDgfCs": {
+      "id": "NvVbCqDgfCs",
+      "title": "How I Code Without Typing",
+      "url": "https://www.youtube.com/watch?v=NvVbCqDgfCs",
+      "upload_date": "20260916",
+      "published": "2026-09-16T00:13:12+00:00",
+      "duration": 2301,
+      "thumbnail": "https://i.ytimg.com/vi/NvVbCqDgfCs/mqdefault.jpg",
+      "description": "After my hand injury, I had to vibe code way more, and found that whisper flow was instrumental to working my way around my keyboard\n\nThank you WorkOS for sponsoring! https://soydev.link/workos\n\nMic Link:\nhttps://geni.us/NzGACcW\n\nWant to sponsor a video? Learn more here: https://soydev.link/sponsor-me\n\nCheck out my Twitch, Twitter, Discord more at https://t3.gg\n\nS/O @Ph4seon3 for the awesome edit 🙏\n\n#coding #programming #software",
+      "transcript": null,
+      "transcript_attempts": 0,
+      "added_at": "2026-10-08T23:00:37+00:00",
+      "transcript_error": "transcript-api: IpBlocked:  | yt-dlp: HTTPError: HTTP Error 429: Too Many Requests"
+    },
+    "oPZLPUtmROo": {
+      "id": "oPZLPUtmROo",
+      "title": "Did AI Kill React Native?",
+      "url": "https://www.youtube.com/watch?v=oPZLPUtmROo",
+      "upload_date": "20260914",
+      "published": "2026-09-14T13:01:43+00:00",
+      "duration": 3773,
+      "thumbnail": "https://i.ytimg.com/vi/oPZLPUtmROo/mqdefault.jpg",
+      "description": "Shopify is making the move away from React Native and it's kinda a big deal, especially since I spent so many years covering React.\n\nThank you to Greptile & Convex for Sponsoring:\nGreptile: https://soydev.link/greptile\nConvex: https://soydev.link/convex\n\nSources:\nhttps://shopify.engineering/back-to-native\nhttps://x.com/jamonholmgren/status/2098246307370692847\nhttps://x.com/ErfanEbrahimnia/status/2098145097334379001\nhttps://x.com/tobi/status/2098406220402946246\nhttps://www.reddit.com/r/reactnative/comments/1wd8b4d/whats_your_opinion_on_this\nhttps://x.com/jmeistrich/status/2098157892838867365\n\nWant to sponsor a video? Learn more here: https://soydev.link/sponsor-me\nCheck out my Twitch, Twitter, Discord more at https://t3.gg\n\nS/O @Ph4seon3 for the awesome edit 🙏",
+      "transcript": null,
+      "transcript_attempts": 0,
+      "added_at": "2026-10-08T23:00:44+00:00",
+      "transcript_error": "transcript-api: IpBlocked:  | yt-dlp: HTTPError: HTTP Error 429: Too Many Requests"
     }
   },
-  "last_fetch": "2026-10-08T13:27:00+00:00"
+  "last_fetch": "2026-10-08T23:02:40+00:00"
 }

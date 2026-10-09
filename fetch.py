@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import random
 import sys
 import time
 import urllib.request
@@ -30,7 +31,8 @@ CHANNEL_URL = "https://www.youtube.com/@t3dotgg/videos"
 DEFAULT_LIMIT = 15          # 每次扫描的最新视频数
 MIN_DURATION = 120          # 秒；更短的视为 short，跳过
 PARAGRAPH_SECONDS = 30      # 字幕按约 30 秒合并为一段
-MAX_TRANSCRIPT_ATTEMPTS = 5 # 字幕连续失败多少次后放弃
+MAX_TRANSCRIPT_ATTEMPTS = 5 # 字幕连续失败多少次后放弃（被限流不计入）
+REQUEST_DELAY = (5, 10)     # 每个视频之间随机等待的秒数，降低被 YouTube 限流的概率
 
 
 def log(msg: str) -> None:
@@ -123,18 +125,35 @@ def to_paragraphs(snippets: list[tuple[float, str]]) -> str:
     return "\n".join(lines) + "\n"
 
 
+class Blocked(RuntimeError):
+    """YouTube 限流 / 封锁了本机 IP 的字幕请求。"""
+
+
+def is_blocked(e: Exception) -> bool:
+    msg = str(e)
+    return (type(e).__name__ in ("IpBlocked", "RequestBlocked", "TooManyRequests")
+            or "429" in msg or "Too Many Requests" in msg)
+
+
+def describe(e: Exception) -> str:
+    return f"{type(e).__name__}: {(str(e).splitlines() or [''])[0][:200]}"
+
+
 def fetch_transcript(video_id: str, info: dict | None) -> str:
-    errors = []
     try:
         return to_paragraphs(snippets_via_api(video_id))
     except Exception as e:  # noqa: BLE001
-        errors.append(f"transcript-api: {type(e).__name__}: {str(e).splitlines()[0][:200]}")
+        if is_blocked(e):  # 被封时不再用 yt-dlp 重复请求，避免封得更久
+            raise Blocked(f"transcript-api: {describe(e)}") from e
+        api_error = f"transcript-api: {describe(e)}"
     try:
         info = info or video_details(video_id)
         return to_paragraphs(snippets_via_ytdlp(info))
     except Exception as e:  # noqa: BLE001
-        errors.append(f"yt-dlp: {type(e).__name__}: {str(e).splitlines()[0][:200]}")
-    raise RuntimeError(" | ".join(errors))
+        err = f"{api_error} | yt-dlp: {describe(e)}"
+        if is_blocked(e):
+            raise Blocked(err) from e
+        raise RuntimeError(err) from e
 
 
 # ---------------------------------------------------------------- main flow
@@ -149,7 +168,8 @@ def sync(limit: int) -> None:
     entries = list_channel(limit)
     log(f"  got {len(entries)} entries")
 
-    for e in entries:
+    blocked = False
+    for i, e in enumerate(entries):
         vid = e["id"]
         v = videos.get(vid)
         if v is None:
@@ -157,6 +177,8 @@ def sync(limit: int) -> None:
             if dur is not None and dur < MIN_DURATION:
                 continue
             log(f"[new] {vid} {e.get('title')}")
+            if i:
+                time.sleep(random.uniform(*REQUEST_DELAY))
             try:
                 info = video_details(vid)
             except Exception as ex:  # noqa: BLE001  (直播预告/会员视频等)
@@ -185,10 +207,12 @@ def sync(limit: int) -> None:
         else:
             info = None
 
-        if v.get("transcript") or v.get("transcript_attempts", 0) >= MAX_TRANSCRIPT_ATTEMPTS:
+        if blocked or v.get("transcript") or v.get("transcript_attempts", 0) >= MAX_TRANSCRIPT_ATTEMPTS:
             v.pop("_info", None)
             continue
 
+        if info is None:  # 已有视频重试字幕：前面没有 video_details 的等待
+            time.sleep(random.uniform(*REQUEST_DELAY))
         path = TRANSCRIPT_DIR / f"{vid}.txt"
         try:
             text = fetch_transcript(vid, v.pop("_info", None) or info)
@@ -196,16 +220,24 @@ def sync(limit: int) -> None:
             v["transcript"] = path.relative_to(ROOT).as_posix()
             v.pop("transcript_error", None)
             log(f"  transcript ok: {vid} ({len(text)} chars)")
+        except Blocked as ex:
+            blocked = True
+            v["transcript_error"] = f"BLOCKED: {ex}"[:500]
+            log(f"  transcript BLOCKED by YouTube (not counted as attempt): {vid}: {ex}")
+            log("  stop requesting transcripts for the rest of this run")
         except Exception as ex:  # noqa: BLE001
             v["transcript_attempts"] = v.get("transcript_attempts", 0) + 1
             v["transcript_error"] = str(ex)[:500]
             log(f"  transcript FAILED ({v['transcript_attempts']}/{MAX_TRANSCRIPT_ATTEMPTS}): {vid}: {ex}")
         save_db(db)
-        time.sleep(1)
 
     for v in videos.values():
         v.pop("_info", None)
     db["last_fetch"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    if blocked:
+        db["last_blocked"] = db["last_fetch"]
+    else:
+        db.pop("last_blocked", None)
     save_db(db)
 
 
@@ -224,6 +256,9 @@ def print_status(db: dict) -> None:
     for v in items:
         print(f"- {v['id']} | {v.get('upload_date')} | {fmt_ts(v.get('duration') or 0)} | {v['title']}")
         print(f"  transcript: {v['transcript']}  ->  write: summaries/{v['id']}.json")
+    if db.get("last_blocked"):
+        print(f"TRANSCRIPT_BLOCKED: YouTube 在 {db['last_blocked']} 限流了本机 IP 的字幕请求，"
+              "已停止本轮字幕抓取（不计入失败次数），下次运行会自动重试")
     if failed:
         print(f"NO_TRANSCRIPT_YET: {len(failed)}")
         for v in failed:
