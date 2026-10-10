@@ -1,0 +1,42 @@
+{
+  "id": "ND_kRgU_WlY",
+  "title_zh": "我终于把 TypeScript 移植到了 Rust：TS Rust 的成本、做法与真正动机",
+  "tldr": "Theo 用 Opus 5.5 在约两周内（全程没读一行代码）完成了 TypeScript 编译器/类型检查器/LSP 的 Rust 重写 TS Rust，比 TSGO 快约 2 倍、比 TS 6 快约 12.5 倍；但他做这件事的真正目的不是性能，而是让完整的 TypeScript 开发循环能跑在 V8 isolate（如 Cloudflare Workers）里，从而大幅降低 agent 的运行算力成本。",
+  "conclusions": [
+    { "t": "00:00", "text": "成本对比悬殊：5 个月里烧了约 $400K 的 Codex（OpenAI 模型）token，最好只做到约 84% 兼容；改用 Opus 5.5 后约 $20K（按 API 价约 $24K）、两周就完成，Theo 称自己没读过一行代码。" },
+    { "t": "15:24", "text": "按订阅额度折算，这次移植约占一个账号周额度的 925%–983%（约两个半月的 Claude Code 订阅用量），叠加一次免费重置约合 $500；Theo 认为以这个价格得到更快、更省内存的 TypeScript 非常划算。" },
+    { "t": "13:45", "text": "成功的关键是 Opus 没有从 JS 直接翻译，而是逐行移植了 Microsoft 的 Go 版本（连 Go 标准库和 goroutine 运行时都搬进了 Rust）；Theo 判断从 JS/TS 直接移植到 Rust 并不可行，所以 Microsoft 先手工移植到 Go 并不是浪费。" },
+    { "t": "16:30", "text": "兼容性接近 100% 的 TSC 7 替代品：目前 6 个 issue 中只有 1 个是 TS Rust 自身的问题，另外 5 个是 TSC 7 本身的 bug 被「忠实地」移植了过来。" },
+    { "t": "18:42", "text": "Bun check 在很多场景更快，但在 Sentry、tRPC 上报出错误的类型错误，在 Effect 仓库上无法通过；Theo 认为 TS Rust 更忠实，但出于长期维护的信心，仍推荐大多数人用 Bun 而不是 TS Rust。" },
+    { "t": "21:30", "text": "真正动机是 WASM 与 V8 isolate：Go 带垃圾回收，很难打包成小而高效的 WASM，TSGO 也因此失去了在浏览器/isolate 中运行的能力；Rust 则非常适合 WASM。" },
+    { "t": "24:50", "text": "Theo 预测推理成本每年下降 10–100 倍，而 agent 运行所需的 VM/内存价格每年上涨约 25%–30%，很快「跑代码的机器」会比模型推理更贵，算力将成为 agent 开发的约束，因此需要比 VM/Docker 更轻的抽象层（如 Cloudflare 的 V8 isolate）。" },
+    { "t": "32:43", "text": "演示：基于 Just Bash 的内存文件系统加 TS Rust，GPT-6.1 Soul 构建的完整应用连同 agent、编译与类型检查全部跑在一个 V8 isolate 中，内存低于 260MB、CPU 峰值约 4%，文件系统设为只读也能照常工作；Astra 版本因引入 Go 写的 esbuild，空闲内存就是其两倍。" },
+    { "t": "43:15", "text": "Theo 认为真正起作用的不是提示词（他的提示非常简短），而是环境与基础设施：持续审查卡点和故障模式、让多个 agent 并行而不互相干扰，他的角色更像工程经理而不是写代码的人。" }
+  ],
+  "key_points": [
+    { "t": "00:00", "text": "发布 TS Rust：TypeScript 编译器、类型检查器与 LSP 的完整 Rust 重写，已发布到 npm。" },
+    { "t": "01:06", "text": "性能：比 TypeScript 6（JS 实现）快 12.5 倍，比 TSGO（TypeScript 7）快约 2 倍；Bun 也推出了 Rust 写的 bun check。" },
+    { "t": "02:43", "text": "Qdrant（向量搜索）赞助段。" },
+    { "t": "04:24", "text": "背景：把 TS 转成 JS 很容易（如 esbuild），真正难且慢的是类型检查，大型项目因此把转译与类型检查分开。" },
+    { "t": "08:12", "text": "TypeScript 类型系统图灵完备，要忠实编码 JS 的种种怪异行为，用 JS 以外的语言重写检查器天然困难。" },
+    { "t": "09:21", "text": "为什么 Microsoft 选 Go：并发好、语法接近 JS；垃圾回收的延迟抖动在长时间编译任务中可以忽略，Theo 认为 Go 是正确选择。" },
+    { "t": "13:12", "text": "TS Rust 的实现：Opus 把 Go 版逐行移植为 Rust，首版比 Go 慢 2–3 倍，随后用 /goal 要求「各方面至少快 2 倍」并在 6 个 Claude 账号上跑了两周。" },
+    { "t": "17:36", "text": "基准：T3 Code 上比 TS7 快约 2 倍；内置 Effect 插件后，含 Effect 检查的端到端速度约为 Bun 的 4 倍；在 tRPC、Sentry、Excalidraw、Effect 等项目上验证。" },
+    { "t": "19:51", "text": "「表面原因」：这曾被认为是 LLM 不可能完成的任务，是他的终极测试，现在他已想不出模型做不到的工程任务。" },
+    { "t": "22:36", "text": "TSGO 丢掉了在浏览器、V8 isolate 和 Node 中直接运行的能力，以及很多 JS API。" },
+    { "t": "23:44", "text": "Artificial Analysis 的成本效率图：同等智能水平的价格在几个月内下降约 10 倍。" },
+    { "t": "24:50", "text": "Cursor 云端每个线程分配一台 16–32GB 的 VM，目前免费，但这种模式难以持续。" },
+    { "t": "28:12", "text": "Cloudflare 便宜的原因：代码在共享的 V8 isolate 中按请求执行，而不是每个用户一台 VM/容器；代价是没有文件系统、不能运行原生代码。" },
+    { "t": "31:32", "text": "演示：借助 Just Bash 的假 bash 与内存文件系统，加上 TS Rust，整个开发循环都在 V8 内运行。" },
+    { "t": "41:35", "text": "展示所用的简短提示词与 /goal，以及通过 SSH 让 agent 使用其他 VPS 算力。" },
+    { "t": "45:27", "text": "收尾：以前只能在脑中设想的疯狂想法，现在交给 Opus 就能验证。" }
+  ],
+  "takeaways": [
+    "让 agent 做大规模语言移植时，优先选择与目标语言更接近的中间实现作为源（如从 Go 版移植到 Rust，而非直接从 JS）。",
+    "给长任务设定可量化的终止目标（如「至少比 Go 版快 2 倍」），否则 agent 容易做一点改进就宣布完成。",
+    "把精力放在环境上：排查反复出现的故障与卡点，让多个 agent 能并行工作而不互相干扰，比打磨提示词更有效。",
+    "需要成熟可维护的快速类型检查时，Theo 更推荐 Bun 的 bun check；对忠实兼容性要求高的大型项目再考虑 TS Rust。"
+  ],
+  "tags": ["TypeScript", "Rust", "Opus 5.5", "性能优化", "开发工作流", "Cloudflare"],
+  "sponsor": "Qdrant"
+}

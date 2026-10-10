@@ -207,7 +207,20 @@
       "transcript": "transcripts/38_6C0dkKmU.txt",
       "transcript_attempts": 0,
       "added_at": "2026-10-09T13:47:43+00:00"
+    },
+    "ND_kRgU_WlY": {
+      "id": "ND_kRgU_WlY",
+      "title": "You can rewrite typescript in rust for $420k",
+      "url": "https://www.youtube.com/watch?v=ND_kRgU_WlY",
+      "upload_date": "20261010",
+      "published": "2026-10-10T10:58:42+00:00",
+      "duration": 2860,
+      "thumbnail": "https://i.ytimg.com/vi/ND_kRgU_WlY/mqdefault.jpg",
+      "description": "I ported all of typescrict into rust, and it only cost me $420k... the second time was way cheaper though\n\nThank you Qdrant for sponsoring! Check them out at: https://soydev.link/qdrant\n\nWant to sponsor a video? Learn more here: https://soydev.link/sponsor-me\n\nCheck out my Twitch, Twitter, Discord more at https://t3.gg\n\nS/O @Ph4seon3 for the awesome edit 🙏",
+      "transcript": "transcripts/ND_kRgU_WlY.txt",
+      "transcript_attempts": 0,
+      "added_at": "2026-10-10T23:43:24+00:00"
     }
   },
-  "last_fetch": "2026-10-09T22:37:14+00:00"
+  "last_fetch": "2026-10-10T23:45:35+00:00"
 }
