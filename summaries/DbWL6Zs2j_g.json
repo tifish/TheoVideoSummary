@@ -1,0 +1,40 @@
+{
+  "id": "DbWL6Zs2j_g",
+  "title_zh": "Meta 终于追上 Anthropic：Muse Wonder Full 评测",
+  "tldr": "Theo 认为 Meta 的 Muse Wonder Full 是 OpenAI、Anthropic 之外第一个真正达到前沿水平的模型：智能上限略低于 Opus/Fable，但极少犯蠢、速度快、token 高效、编排子 agent 很强、输出好读；不过前端和 3D 很差，命名与定价混乱，便宜的 API 版 Muse Wonder 则明显更弱，不值得用。",
+  "conclusions": [
+    { "t": "00:35", "text": "Muse Wonder Full 的 max 档在 Artificial Analysis 上超过所有 OpenAI 模型、排名第三；Theo 声明 Meta 没有付钱给他，本期只有 Browserbase 赞助。" },
+    { "t": "02:46", "text": "最大槽点是「一个名字、两个模型」：API 版 Muse Wonder 约 120 TPS、每百万 token $4 入 / $20 出 / $0.20 缓存读，略低于 Opus；官方跑分用的是更大的 Wonder Full（约 50 TPS），只能通过 Muse Code 订阅使用且没有公布价格，无法做性价比比较，Theo 推测它可能比 Opus 5.5 还贵。" },
+    { "t": "10:35", "text": "前端 UI 和 3D 很差：UI 像 Sonnet 3.7 时代的套路化产物，Blender 建模很糟，Meta 自己也把视觉/空间推理列为已知局限；Theo 强调 3D、computer use 这类能力来自针对性的后训练环境，不会随着模型变聪明自动出现。" },
+    { "t": "18:57", "text": "Theo 最欣赏的是它「不犯蠢」：他把「聪明」和「蠢」分开打分，Astra 聪明但蠢度 10/10，Opus 约 3/10，Muse Wonder Full 智能上限约 8–9/10，但蠢度只有 1–2/10，几天高强度使用里犯的蠢错比 Soul/Astra 半小时还少。" },
+    { "t": "16:41", "text": "编排能力是前沿级别：给子 agent 的提示严谨（要求读实现、不得引用未打开的文件、只分析不改），能同时管理大量并行 agent，这是 OpenAI、Anthropic 以外的实验室通常做不到的。" },
+    { "t": "23:19", "text": "在 T3 Code 远程更新 bug 的实测中，Muse 的回答最清晰，并且找到了别人已提交的一行修复 PR；Opus 的修复正确但输出啰嗦，Soul 理解错了问题，给出的方案还有害。" },
+    { "t": "24:58", "text": "自建的代码库审计和 PR 审查对比：Wonder Full 与 Astra、Fable 5.1 接近但低于 Opus 5.5，耗时约为 Opus/Soul 的一半，token 也比 Opus 5.5 xhigh 少；PR 审查中 Opus 找到 23 项（发现最多但小毛病也多），Soul 9 项，Muse 16 项居中、新发现 5 项，是不错的折中。普通 Muse Wonder 的审计质量比 Full 低 30% 以上。" },
+    { "t": "35:29", "text": "Theo 认为这是 Fable 之后第一个他愿意日常使用的非 OpenAI/Anthropic 模型（棘手问题仍交给 Opus），但不建议因此退掉 Claude Code 订阅；第三个前沿玩家会让竞争更激烈，对所有人都是好事。" }
+  ],
+  "key_points": [
+    { "t": "00:00", "text": "开场：Meta 发布 Muse Wonder 系列，Theo 已试用数日并对网友「收钱」的质疑作出回应。" },
+    { "t": "03:10", "text": "Browserbase 赞助段（agent 浏览器、凭据、搜索与抓取 API）。" },
+    { "t": "03:53", "text": "官方公告：未公布价格，Full max 在多项基准超过 Fable、Astra、Opus 5.5，Terminal Bench 分数很高；后训练重点之一是记忆能力。" },
+    { "t": "05:34", "text": "3D 测试：拖拉机演示远不如 Opus 5.5，Fish Slop 游戏机制尚可但建模很差，好于 Grok 4.7，但被 Sonnet、Opus 碾压。" },
+    { "t": "08:21", "text": "Theo 推荐有 3D 需求的人直接用 $200 的 Claude Code 方案；他还没测试 $50/$200 Muse Code 订阅的额度。" },
+    { "t": "09:30", "text": "SkateBench：Muse Wonderful 达到 95%，是除 Gemini 外第一个超过 90% 的模型。" },
+    { "t": "11:08", "text": "用 Thunderstore 索引缓慢的审计任务展示其写作风格：不像 Claude 蒸馏出来的风格，读起来很舒服。" },
+    { "t": "13:21", "text": "Lust 编译器项目中让 Muse 与 Opus 并行做同样的任务：Opus 更正确、更深入，Muse 产出更多、速度更快，同时是很好的审查者。" },
+    { "t": "16:08", "text": "让它调用 Haiku 5.5 子 agent 探索 T3 Code 代码库，展示它给子 agent 写的高质量提示。" },
+    { "t": "20:01", "text": "T3 Code「一键更新所有远程机器」bug：对比 Opus、Soul、Muse 三者的排查过程。" },
+    { "t": "24:25", "text": "自建基准：T3 Code 架构审计、Lakebed 审计、TS Rust 审计，比较各模型的得分与耗时。" },
+    { "t": "27:08", "text": "token 效率：Wonder Full 每个任务约 53.8K token，与普通 Wonder（54.2K）几乎相同，但能力差距很大。" },
+    { "t": "28:16", "text": "8 个未合并 PR 的审查对比：Opus 5.5、GPT-6.1 Soul、Muse Wonder Full 的发现数量、有效率与新发现。" },
+    { "t": "30:28", "text": "「下一步做什么」深度调研：Opus 约 30 分钟、报告冗长；Muse 约 17 分钟，结论有优先级（P0/P1/P2）、更清晰。" },
+    { "t": "36:33", "text": "收尾：祝贺 Meta 团队，并调侃 Google 的 Gemini 4 Argan 迟迟不发布。" }
+  ],
+  "takeaways": [
+    "评估 Muse 时要区分 API 版 Muse Wonder 和订阅版 Wonder Full：网上很多差评来自前者。",
+    "不要用 Muse 做前端 UI 或 3D 任务，这类需求用 Claude（Opus/Sonnet）。",
+    "可以把 Muse Wonder Full 用作 bug 排查、PR 审查和子 agent 编排，难题再交给 Opus 复核。",
+    "对 PR 审查，单一模型各有偏差：Opus 发现多但小毛病多，Soul 精准但遗漏多，可以组合使用多个模型。"
+  ],
+  "tags": ["Meta", "Muse Wonder", "模型评测", "基准测试", "代码审查", "Opus 5.5"],
+  "sponsor": "Browserbase"
+}
