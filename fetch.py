@@ -19,7 +19,6 @@ import json
 import random
 import sys
 import time
-import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -62,33 +61,8 @@ def fmt_ts(seconds: float) -> str:
     return f"{h}:{m:02d}:{sec:02d}" if h else f"{m:02d}:{sec:02d}"
 
 
-# ---------------------------------------------------------------- listing
-
-def list_channel(limit: int) -> list[dict]:
-    import yt_dlp
-
-    opts = {"extract_flat": True, "playlistend": limit, "quiet": True, "no_warnings": True}
-    with yt_dlp.YoutubeDL(opts) as ydl:
-        info = ydl.extract_info(CHANNEL_URL, download=False)
-    return [e for e in info.get("entries") or [] if e.get("id")]
-
-
-def video_details(video_id: str) -> dict:
-    import yt_dlp
-
-    opts = {"quiet": True, "no_warnings": True, "skip_download": True}
-    with yt_dlp.YoutubeDL(opts) as ydl:
-        return ydl.extract_info(f"https://www.youtube.com/watch?v={video_id}", download=False)
-
-
 # ---------------------------------------------------------------- transcripts
-
-def snippets_via_api(video_id: str) -> list[tuple[float, str]]:
-    from youtube_transcript_api import YouTubeTranscriptApi
-
-    t = YouTubeTranscriptApi().fetch(video_id, languages=["en", "en-US", "en-GB"])
-    return [(s.start, s.text) for s in t.snippets]
-
+# 所有对 YouTube 的访问都通过已登录的真实 Chrome（browser_transcript.py），不使用匿名接口。
 
 def parse_json3(data: dict) -> list[tuple[float, str]]:
     out = []
@@ -97,22 +71,6 @@ def parse_json3(data: dict) -> list[tuple[float, str]]:
         if text:
             out.append((ev.get("tStartMs", 0) / 1000, text))
     return out
-
-
-def snippets_via_ytdlp(info: dict) -> list[tuple[float, str]]:
-    """备用方案：从 yt-dlp 元数据中的字幕 json3 地址下载。"""
-    for key in ("subtitles", "automatic_captions"):
-        tracks = (info.get(key) or {})
-        for lang in ("en", "en-US", "en-orig", "en-GB"):
-            for fmt in tracks.get(lang) or []:
-                if fmt.get("ext") != "json3":
-                    continue
-                req = urllib.request.Request(fmt["url"], headers={"User-Agent": "Mozilla/5.0"})
-                with urllib.request.urlopen(req, timeout=60) as r:
-                    out = parse_json3(json.load(r))
-                if out:
-                    return out
-    raise RuntimeError("no English subtitle track found via yt-dlp")
 
 
 def to_paragraphs(snippets: list[tuple[float, str]]) -> str:
@@ -133,47 +91,28 @@ def to_paragraphs(snippets: list[tuple[float, str]]) -> str:
 
 
 class Blocked(RuntimeError):
-    """YouTube 限流 / 封锁了本机 IP 的字幕请求。"""
+    """YouTube 拦截了字幕请求（人机验证 / 429 / 返回空内容）。"""
 
 
 def is_blocked(e: Exception) -> bool:
     msg = str(e)
-    return (type(e).__name__ in ("IpBlocked", "RequestBlocked", "TooManyRequests")
-            or "429" in msg or "Too Many Requests" in msg or "LOGIN_REQUIRED" in msg or "EMPTY_CAPTIONS" in msg)
+    return any(k in msg for k in ("LOGIN_REQUIRED", "429", "Too Many Requests", "EMPTY_CAPTIONS"))
 
 
 def describe(e: Exception) -> str:
     return f"{type(e).__name__}: {(str(e).splitlines() or [''])[0][:200]}"
 
 
-def fetch_transcript(video_id: str, info: dict | None, browser: BrowserSession | None) -> str:
-    """依次尝试：真实浏览器（已登录）→ youtube-transcript-api → yt-dlp。被封时立即停止。"""
-    errors = []
-    if browser is not None:
-        try:
-            snippets = parse_json3(browser.json3(video_id))
-            if snippets:
-                return to_paragraphs(snippets)
-            errors.append("browser: empty transcript")
-        except Exception as e:  # noqa: BLE001
-            if is_blocked(e):  # 已登录的真实浏览器都被拦，匿名方式更不可能成功
-                raise Blocked(f"browser: {describe(e)}") from e
-            errors.append(f"browser: {describe(e)}")
+def fetch_transcript(video_id: str, browser: BrowserSession) -> str:
     try:
-        return to_paragraphs(snippets_via_api(video_id))
+        snippets = parse_json3(browser.json3(video_id))
     except Exception as e:  # noqa: BLE001
-        errors.append(f"transcript-api: {describe(e)}")
-        if is_blocked(e):  # 被封时不再用 yt-dlp 重复请求，避免封得更久
-            raise Blocked(" | ".join(errors)) from e
-    try:
-        if not (info and "automatic_captions" in info):  # 浏览器读取的详情不含字幕地址
-            info = video_details(video_id)
-        return to_paragraphs(snippets_via_ytdlp(info))
-    except Exception as e:  # noqa: BLE001
-        errors.append(f"yt-dlp: {describe(e)}")
         if is_blocked(e):
-            raise Blocked(" | ".join(errors)) from e
-        raise RuntimeError(" | ".join(errors)) from e
+            raise Blocked(describe(e)) from e
+        raise RuntimeError(describe(e)) from e
+    if not snippets:
+        raise RuntimeError("empty transcript")
+    return to_paragraphs(snippets)
 
 
 # ---------------------------------------------------------------- main flow
@@ -184,18 +123,24 @@ def sync(limit: int) -> None:
     TRANSCRIPT_DIR.mkdir(exist_ok=True)
     SUMMARY_DIR.mkdir(exist_ok=True)
 
+    if not BrowserSession.available():
+        raise SystemExit("browser profile not set up: run python fetch.py --login first")
+    browser = BrowserSession()
+    try:
+        _sync(limit, db, videos, browser)
+    finally:
+        browser.close()
+
+
+def _sync(limit: int, db: dict, videos: dict, browser: BrowserSession) -> None:
     log(f"Listing latest {limit} videos from {CHANNEL_URL} ...")
-    entries = list_channel(limit)
+    entries = browser.list_videos(CHANNEL_URL, limit)
     log(f"  got {len(entries)} entries")
     # 已登记但还没拿到字幕、且已不在最新列表里的视频，也继续重试
     listed = {e["id"] for e in entries}
     entries += [{"id": vid} for vid, v in videos.items() if not v.get("transcript") and vid not in listed]
 
     blocked = False
-    # 已登录的专用 Chrome 配置优先；窗口在第一次需要抓字幕时才打开
-    browser = BrowserSession() if BrowserSession.available() else None
-    if browser is None:
-        log("  browser profile not set up (run: python fetch.py --login); using anonymous requests only")
     for i, e in enumerate(entries):
         vid = e["id"]
         v = videos.get(vid)
@@ -207,8 +152,7 @@ def sync(limit: int) -> None:
             if i:
                 time.sleep(random.uniform(*REQUEST_DELAY))
             try:
-                # 已登录的浏览器优先：匿名的 yt-dlp 在被人机验证拦截的 IP 上读不到详情
-                info = browser.details(vid) if browser is not None else video_details(vid)
+                info = browser.details(vid)
             except Exception as ex:  # noqa: BLE001  (直播预告/会员视频等)
                 log(f"  skip: cannot read details: {str(ex).splitlines()[0][:200]}")
                 continue
@@ -231,19 +175,17 @@ def sync(limit: int) -> None:
                 "transcript_attempts": 0,
                 "added_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
             }
-            v["_info"] = info  # 仅本次运行使用
         else:
             info = None
 
         if blocked or v.get("transcript") or v.get("transcript_attempts", 0) >= MAX_TRANSCRIPT_ATTEMPTS:
-            v.pop("_info", None)
             continue
 
-        if info is None:  # 已有视频重试字幕：前面没有 video_details 的等待
+        if info is None:  # 已有视频重试字幕：前面没有读取详情前的等待
             time.sleep(random.uniform(*REQUEST_DELAY))
         path = TRANSCRIPT_DIR / f"{vid}.txt"
         try:
-            text = fetch_transcript(vid, v.pop("_info", None) or info, browser)
+            text = fetch_transcript(vid, browser)
             path.write_text(text, encoding="utf-8")
             v["transcript"] = path.relative_to(ROOT).as_posix()
             v.pop("transcript_error", None)
@@ -259,10 +201,6 @@ def sync(limit: int) -> None:
             log(f"  transcript FAILED ({v['transcript_attempts']}/{MAX_TRANSCRIPT_ATTEMPTS}): {vid}: {ex}")
         save_db(db)
 
-    if browser is not None:
-        browser.close()
-    for v in videos.values():
-        v.pop("_info", None)
     db["last_fetch"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
     if blocked:
         db["last_blocked"] = db["last_fetch"]

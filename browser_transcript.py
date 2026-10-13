@@ -30,6 +30,29 @@ CAPTION_TIMEOUT = 90  # 秒；等待播放器发出字幕请求（含片头广�
 # 模拟真人观看节奏：打开后先看一会儿再开字幕，拿到字幕后继续播放一段时间再关闭
 BEFORE_CAPTIONS = (2, 5)  # 秒
 KEEP_WATCHING = (20, 60)  # 秒
+STALL_SECONDS = 20       # 播放时间这么久没有前进（如片头广告加载失败）就刷新页面
+MAX_RELOADS = 2
+
+_VIDEO_TIME_JS = "() => document.querySelector('#movie_player video')?.currentTime ?? -1"
+
+# 频道「视频」页中的列表（ytInitialData 里的 lockupViewModel）
+_CHANNEL_VIDEOS_JS = """() => {
+  const out = [];
+  const walk = (o) => {
+    if (!o || typeof o !== 'object') return;
+    const lv = o.lockupViewModel;
+    if (lv && lv.contentId) {
+      const badges = JSON.stringify(lv.contentImage || {}).match(/"text":"(\\d+(?::\\d+)+)"/);
+      out.push({id: lv.contentId,
+                title: lv.metadata?.lockupMetadataViewModel?.title?.content || '',
+                duration: badges ? badges[1] : null});
+      return;
+    }
+    for (const k in o) walk(o[k]);
+  };
+  walk(window.ytInitialData);
+  return out;
+}"""
 
 # 在页面中执行：静音播放、跳过广告、开启英文字幕轨
 _DRIVE_PLAYER_JS = """(lang) => {
@@ -218,8 +241,33 @@ class BrowserSession:
             raise RuntimeError(f"LOGIN_REQUIRED: {self._state['reason']}")
         return page, self._state
 
+    def list_videos(self, channel_url: str, limit: int) -> list[dict]:
+        """频道最新视频列表：[{id, title, duration(秒或 None)}]，按页面顺序（新→旧）。"""
+        page = self._context().new_page()
+        try:
+            page.goto(channel_url, wait_until="domcontentloaded", timeout=60000)
+            page.wait_for_function("window.ytInitialData", timeout=60000)
+            page.wait_for_timeout(random.uniform(*BEFORE_CAPTIONS) * 1000)
+            items = page.evaluate(_CHANNEL_VIDEOS_JS)
+        finally:
+            page.close()
+        if not items:
+            raise RuntimeError("no videos found on channel page (layout changed?)")
+        seen, out = set(), []
+        for it in items:
+            if it["id"] in seen:
+                continue
+            seen.add(it["id"])
+            dur = None
+            if it["duration"]:
+                dur = 0
+                for part in it["duration"].split(":"):
+                    dur = dur * 60 + int(part)
+            out.append({"id": it["id"], "title": it["title"], "duration": dur})
+        return out[:limit]
+
     def details(self, video_id: str) -> dict:
-        """视频元数据，字段与 yt-dlp 的 extract_info 对齐（fetch.py 使用的部分）。"""
+        """视频元数据（fetch.py 登记新视频所需的字段）。"""
         try:
             _, st = self._open(video_id)
         except Exception:
@@ -252,11 +300,23 @@ class BrowserSession:
             page.evaluate("() => { const p = document.querySelector('#movie_player'); p?.mute?.(); p?.playVideo?.(); }")
             page.wait_for_timeout(random.uniform(*BEFORE_CAPTIONS) * 1000)
             deadline = time.time() + CAPTION_TIMEOUT
+            reloads, last_t, last_move = 0, None, time.time()
             while not hits and time.time() < deadline:
                 page.evaluate(_DRIVE_PLAYER_JS, lang)
                 page.wait_for_timeout(1000)
+                t = page.evaluate(_VIDEO_TIME_JS)
+                if t != last_t:
+                    last_t, last_move = t, time.time()
+                elif time.time() - last_move > STALL_SECONDS and reloads < MAX_RELOADS:
+                    # 播放卡住（常见于片头广告加载失败）：像真人一样刷新页面
+                    reloads += 1
+                    page.reload(wait_until="domcontentloaded", timeout=60000)
+                    page.wait_for_selector("#movie_player", timeout=60000)
+                    page.wait_for_timeout(random.uniform(*BEFORE_CAPTIONS) * 1000)
+                    last_t, last_move = None, time.time()
+                    deadline = max(deadline, time.time() + CAPTION_TIMEOUT / 2)
             if not hits:
-                raise RuntimeError("player did not request captions in time")
+                raise RuntimeError(f"player did not request captions in time (reloads: {reloads})")
 
             resp = hits[0]
             if resp.status == 429:
