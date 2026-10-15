@@ -246,7 +246,21 @@
       "transcript": "transcripts/DbWL6Zs2j_g.txt",
       "transcript_attempts": 0,
       "added_at": "2026-10-13T23:12:26+00:00"
+    },
+    "NE006pkiAnk": {
+      "id": "NE006pkiAnk",
+      "title": "So I've been testing Gemini 4...",
+      "url": "https://www.youtube.com/watch?v=NE006pkiAnk",
+      "upload_date": "20261014",
+      "published": "2026-10-14T15:45:44+00:00",
+      "duration": 2310,
+      "thumbnail": "https://i.ytimg.com/vi/NE006pkiAnk/mqdefault.jpg",
+      "description": "Argon might be Google'ss Best Model Yet with Gemini 4, but is it 8 months to late? \n\nThank you to WorkOS for Sponsoring! Check them out here:\nhttps://soydev.link/workos\n\nWant to sponsor a video? Learn more here: https://soydev.link/sponsor-me\n\nCheck out my Twitch, Twitter, Discord more at https://t3.gg\n\nS/O @Ph4seon3 for the awesome edit 🙏\n\n#google #ai #programming",
+      "transcript": null,
+      "transcript_attempts": 1,
+      "added_at": "2026-10-15T23:49:21+00:00",
+      "transcript_error": "RuntimeError: player did not request captions in time (reloads: 0)"
     }
   },
-  "last_fetch": "2026-10-13T23:13:03+00:00"
+  "last_fetch": "2026-10-15T23:50:55+00:00"
 }
