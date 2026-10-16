@@ -1,0 +1,40 @@
+{
+  "id": "NE006pkiAnk",
+  "title_zh": "Gemini 4 Argon 实测：跑分亮眼，真实代码工作却频繁出错",
+  "tldr": "Theo 认为时隔 8 个月才发布的 Gemini 4 Argon 是今年最差的发布之一：前端设计和 SkateBench 表现不错，但在真实代码库审计中错误论断比例极高、写出的 PR 冗长且不可用，又贵又慢；他今后只会用 Gemini 获取 YouTube 数据，写代码继续用 Opus 5.5。",
+  "conclusions": [
+    { "t": "04:21", "text": "标价 $2/$10（每百万 token 输入/输出）看似便宜，但 Theo 认为并不划算：模型很耗 token，缓存命中率只有约 70–80%（其他模型 99%+），在 Artificial Analysis 上按任务算比 Opus 5.5 high 更贵、得分却更低；而且这只是首发价，12 月 1 日起翻倍到 $4/$20。" },
+    { "t": "10:25", "text": "Theo 批评 Google 是唯一经常给已发布模型涨价的实验室，先低价后翻倍会让开发者不敢在上面重度构建，应该给出能长期提供的价格、以后再降。" },
+    { "t": "12:41", "text": "前端是它的强项之一：配合 Anthropic 官方 design skill 能做出不像 AI 生成的首页（不建议用 taste skill），但 Theo 认为 Fable 5.1 仍是做前端最好的模型；Gemini 生成 token 快，但解决问题并不快。" },
+    { "t": "16:01", "text": "Gemini 在 SkateBench 上首次拿到满分（Opus 5.5 max 只有 79%），说明它确实有独特能力；YouTube 数据（如获取视频字幕）和视觉任务也是 Gemini 的特有优势，但 Theo 认为这类独有能力已比过去少。" },
+    { "t": "21:27", "text": "Artificial Analysis 的 Omniscience 测得幻觉率仅 15%，但这主要来自更多地拒答，综合分只排第四；Theo 判断这个基准不符合真实情况，他在日常代码工作中看到它大量出错。" },
+    { "t": "24:16", "text": "代码库审计基准中表现极差：TS Rust 审计得分 4.38（GPT-6.1 Soul 8.84、Opus 5.5 8.78），36 条论断中 24 条是错的、耗时 43 分钟；Lakebed 审计 78 条发现中 56 条错误，T3 Code 架构审计 47 条错误，比 Muse Wonder Full 的正确论断还多。" },
+    { "t": "30:54", "text": "真实任务失败：修 T3 Code SQLite 连接问题时，它诊断大体正确但修错了一半，花 30 分钟写了 1200 行、CI 失败、无视仓库的 PR 规范，也没发现已有两个现成修复 PR；正确改动只需约 21 行。" },
+    { "t": "36:26", "text": "Theo 的结论是 Gemini 4 Argon 和普通版 Muse Wonder 都不能为 T3 Code 贡献有用代码，他打算自动关闭这类模型提交的 PR；今后只用 Gemini 获取 YouTube 数据，写代码坚持用 Opus 5.5。" }
+  ],
+  "key_points": [
+    { "t": "00:00", "text": "开场：距 Gemini 3.1 Pro 已 8 个月，Google 终于发布大模型 Gemini 4 Argon；Theo 通过 Google 朋友提前拿到访问权限。" },
+    { "t": "01:38", "text": "WorkOS 赞助段（AuthMD 让 agent 代用户注册）。" },
+    { "t": "02:44", "text": "官方公告：通过 API、AI Studio、Anti-Gravity、Gemini App 等渠道上线，号称在 VALS 指数排名第一；Theo 吐槽 Google 产品线混乱，并指出图表中 Muse Wonderful 的价格是错的。" },
+    { "t": "03:49", "text": "Artificial Analysis 智能指数：高于 Astra 和 6.1 Soul，但明显低于 Opus 5.5，且按任务计算成本更高。" },
+    { "t": "06:01", "text": "一位 Google 员工私下的评价只是「我用 Opus 5 的次数变少了」；官方案例（Chrome 重构、Deloitte 评测 100% 成功）被 Theo 认为说服力不足。" },
+    { "t": "07:40", "text": "SkateBench：Argon 首次满分，token 效率也不错，但测试期间 API 报错率很高。" },
+    { "t": "09:20", "text": "多模态与视觉一直是 Gemini 强项，值得针对复杂视觉任务做对比；定价为首发价，12 月 1 日翻倍。" },
+    { "t": "10:59", "text": "前端测试：用 WhichAI 对比不同模型的首页设计，开启 Anthropic design skill 后效果明显更好。" },
+    { "t": "13:47", "text": "各家模型的独特能力：OpenAI 生成图片、Grok 访问 X 数据、Gemini 访问 YouTube；但 Theo 认为 Gemini 处理大多数 Google 服务并不好。" },
+    { "t": "17:06", "text": "Fish Slop 3D 游戏测试：水面渲染错误、潜艇建模一般；食物掉到缸底不会消失导致鱼饿死，攻击力道具在怪物出现前就过期，缺乏「大模型的思考深度」。" },
+    { "t": "21:27", "text": "幻觉基准 AA Omniscience：幻觉率低，但综合得分只排第四。" },
+    { "t": "22:34", "text": "自建审计基准：TS Rust、T3 Code 远程更新 bug、Lakebed、T3 Code 架构，与 Opus 5.5、GPT-6.1 Soul、Astra、Muse Wonder 对比。" },
+    { "t": "29:18", "text": "T3 Code SQLite 修复实测：PR 冗长、CI 失败，最后用 Opus 5.5 复盘并关闭 PR。" },
+    { "t": "33:41", "text": "Anti-Gravity / ACP 集成的问题：账号被封可能牵连整个 Google 账号；中途连接网关失败、模型与推理强度绑定成不同的模型名等。" },
+    { "t": "35:54", "text": "总结：今年最差的发布之一，听说之后会有更好的快照版本；Theo 会继续用 Opus 5.5。" }
+  ],
+  "takeaways": [
+    "评估 Gemini 4 Argon 的成本时按任务总成本计算，并考虑缓存命中率低以及 12 月 1 日起价格翻倍。",
+    "不要直接采纳 Gemini 4 Argon 的代码审查或审计结论，先用 GPT-6.1 Soul 或 Opus 5.5 等更可靠的模型复核。",
+    "用 AI 做前端设计时启用 Anthropic 官方 design skill，效果明显好于不用 skill 或用 taste skill。",
+    "需要 YouTube 数据（如字幕）或复杂视觉任务时可以试试 Gemini，这是它相对其他模型的独特优势。"
+  ],
+  "tags": ["Google", "Gemini", "模型评测", "基准测试", "代码审查", "Opus 5.5"],
+  "sponsor": "WorkOS"
+}

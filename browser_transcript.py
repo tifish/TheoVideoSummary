@@ -32,8 +32,17 @@ BEFORE_CAPTIONS = (2, 5)  # 秒
 KEEP_WATCHING = (20, 60)  # 秒
 STALL_SECONDS = 20       # 播放时间这么久没有前进（如片头广告加载失败）就刷新页面
 MAX_RELOADS = 2
+# 正片已播放这么久仍没有字幕请求：关掉再打开字幕（最多 MAX_RESTARTS 次），仍不行再刷新页面
+CAPTION_GRACE = 15       # 秒
+MAX_RESTARTS = 2
 
-_VIDEO_TIME_JS = "() => document.querySelector('#movie_player video')?.currentTime ?? -1"
+_VIDEO_STATE_JS = """() => {
+  const p = document.querySelector('#movie_player');
+  return {t: p?.querySelector('video')?.currentTime ?? -1, ad: !!p?.classList.contains('ad-showing')};
+}"""
+
+# 关闭字幕模块；下一次 _DRIVE_PLAYER_JS 会重新加载并选中字幕轨（相当于手动按两次 C）
+_RESTART_CAPTIONS_JS = "() => document.querySelector('#movie_player')?.unloadModule?.('captions')"
 
 # 频道「视频」页中的列表（ytInitialData 里的 lockupViewModel）
 _CHANNEL_VIDEOS_JS = """() => {
@@ -225,10 +234,12 @@ class BrowserSession:
         self._close_page()
         page = self._context().new_page()
         hits = self._hits = []
+        seen = self._seen = []
         def on_response(r) -> None:
             # 只收本视频的字幕：片头广告的字幕也走同一个接口；tlang= 是机器翻译
             if "/api/timedtext" in r.url:
                 q = parse_qs(urlparse(r.url).query)
+                seen.append(q.get("v", ["?"])[0])
                 if q.get("v") == [video_id] and "tlang" not in q:
                     hits.append(r)
 
@@ -300,23 +311,43 @@ class BrowserSession:
             page.evaluate("() => { const p = document.querySelector('#movie_player'); p?.mute?.(); p?.playVideo?.(); }")
             page.wait_for_timeout(random.uniform(*BEFORE_CAPTIONS) * 1000)
             deadline = time.time() + CAPTION_TIMEOUT
-            reloads, last_t, last_move = 0, None, time.time()
+            reloads = restarts = 0
+            last_t, last_move, watched = None, time.time(), 0
+            vs = {}
+
+            def reload() -> None:
+                nonlocal reloads, restarts, last_t, last_move, watched, deadline
+                reloads += 1
+                page.reload(wait_until="domcontentloaded", timeout=60000)
+                page.wait_for_selector("#movie_player", timeout=60000)
+                page.wait_for_timeout(random.uniform(*BEFORE_CAPTIONS) * 1000)
+                restarts, last_t, last_move, watched = 0, None, time.time(), 0
+                deadline = max(deadline, time.time() + CAPTION_TIMEOUT / 2)
+
             while not hits and time.time() < deadline:
                 page.evaluate(_DRIVE_PLAYER_JS, lang)
                 page.wait_for_timeout(1000)
-                t = page.evaluate(_VIDEO_TIME_JS)
-                if t != last_t:
-                    last_t, last_move = t, time.time()
+                vs = page.evaluate(_VIDEO_STATE_JS)
+                if vs["t"] != last_t:
+                    last_t, last_move = vs["t"], time.time()
+                    if not vs["ad"]:
+                        watched += 1
                 elif time.time() - last_move > STALL_SECONDS and reloads < MAX_RELOADS:
                     # 播放卡住（常见于片头广告加载失败）：像真人一样刷新页面
-                    reloads += 1
-                    page.reload(wait_until="domcontentloaded", timeout=60000)
-                    page.wait_for_selector("#movie_player", timeout=60000)
-                    page.wait_for_timeout(random.uniform(*BEFORE_CAPTIONS) * 1000)
-                    last_t, last_move = None, time.time()
-                    deadline = max(deadline, time.time() + CAPTION_TIMEOUT / 2)
+                    reload()
+                    continue
+                if watched >= CAPTION_GRACE and not hits:
+                    # 正片在播放但播放器没有请求字幕：先关掉再打开字幕，仍不行就刷新页面
+                    watched = 0
+                    if restarts < MAX_RESTARTS:
+                        restarts += 1
+                        page.evaluate(_RESTART_CAPTIONS_JS)
+                    elif reloads < MAX_RELOADS:
+                        reload()
             if not hits:
-                raise RuntimeError(f"player did not request captions in time (reloads: {reloads})")
+                raise RuntimeError(
+                    f"player did not request captions in time (reloads: {reloads}, restarts: {restarts}, "
+                    f"ad: {vs.get('ad')}, t: {vs.get('t')}, other timedtext: {self._seen})")
 
             resp = hits[0]
             if resp.status == 429:
