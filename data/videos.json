@@ -259,7 +259,20 @@
       "transcript": "transcripts/NE006pkiAnk.txt",
       "transcript_attempts": 1,
       "added_at": "2026-10-15T23:49:21+00:00"
+    },
+    "hiI0Vk4NgeY": {
+      "id": "hiI0Vk4NgeY",
+      "title": "Anthropic Rebuilt Git (yes really)",
+      "url": "https://www.youtube.com/watch?v=hiI0Vk4NgeY",
+      "upload_date": "20261015",
+      "published": "2026-10-16T04:38:27+00:00",
+      "duration": 2884,
+      "thumbnail": "https://i.ytimg.com/vi/hiI0Vk4NgeY/mqdefault.jpg",
+      "description": "In just 5 months, Anthropic went from 2,500 merges per day to over 30,000 this September and they wrote a blog explaining just how that was possible with their new system, Scion\n\nThank you Infinite Red for sponsoring! Check them out here:\nhttps://soydev.link/infinite\n\nSources:\nhttps://www.anthropic.com/engineering/redesigning-source-control\n\nWant to sponsor a video? Learn more here: https://soydev.link/sponsor-me\n\nCheck out my Twitch, Twitter, Discord more at https://t3.gg\n\nS/O @Ph4seon3 for the awesome edit 🙏\n\n#ai #claude #openai",
+      "transcript": "transcripts/hiI0Vk4NgeY.txt",
+      "transcript_attempts": 0,
+      "added_at": "2026-10-16T23:54:22+00:00"
     }
   },
-  "last_fetch": "2026-10-16T01:16:26+00:00"
+  "last_fetch": "2026-10-16T23:55:42+00:00"
 }
