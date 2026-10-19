@@ -272,7 +272,21 @@
       "transcript": "transcripts/hiI0Vk4NgeY.txt",
       "transcript_attempts": 0,
       "added_at": "2026-10-16T23:54:22+00:00"
+    },
+    "m-B3jIMMmUE": {
+      "id": "m-B3jIMMmUE",
+      "title": "Your prompts kinda suck",
+      "url": "https://www.youtube.com/watch?v=m-B3jIMMmUE",
+      "upload_date": "20261018",
+      "published": "2026-10-18T23:57:04+00:00",
+      "duration": 1907,
+      "thumbnail": "https://i.ytimg.com/vi/m-B3jIMMmUE/mqdefault.jpg",
+      "description": "Most of the features engineers are making, are just prompts, and you can make your life way easier by prompting better\n\nThank you Macroscope for sponsoring! Check them out at: https://soydev.link/macroscope\n\nWant to sponsor a video? Learn more here: https://soydev.link/sponsor-me\n\nCheck out my Twitch, Twitter, Discord more at https://t3.gg\n\nS/O @Ph4seon3 for the awesome edit 🙏\n\n#ai #programming #prompts",
+      "transcript": null,
+      "transcript_attempts": 1,
+      "added_at": "2026-10-19T22:43:22+00:00",
+      "transcript_error": "RuntimeError: player did not request captions in time (reloads: 0, restarts: 0, ad: True, t: 93.493681, other timedtext: ['4WfrjWKhdNw'])"
     }
   },
-  "last_fetch": "2026-10-18T23:34:17+00:00"
+  "last_fetch": "2026-10-19T22:44:56+00:00"
 }
