@@ -285,7 +285,20 @@
       "transcript": "transcripts/m-B3jIMMmUE.txt",
       "transcript_attempts": 1,
       "added_at": "2026-10-19T22:43:22+00:00"
+    },
+    "3OshsLm3_OQ": {
+      "id": "3OshsLm3_OQ",
+      "title": "Opus 5.5 is proof that we do need smarter models",
+      "url": "https://www.youtube.com/watch?v=3OshsLm3_OQ",
+      "upload_date": "20261020",
+      "published": "2026-10-20T22:13:42+00:00",
+      "duration": 1873,
+      "thumbnail": "https://i.ytimg.com/vi/3OshsLm3_OQ/mqdefault.jpg",
+      "description": "As we see games get full blown crossovers and models get incredible at optimizing things on their own, I'm not sure we actually NEED smarter models? \n\nThank you to Browserbase for Sponsoring! Check them out here:\nhttps://soydev.link/browserbase\n\nWant to sponsor a video? Learn more here: https://soydev.link/sponsor-me\n\nCheck out my Twitch, Twitter, Discord more at https://t3.gg\n\nS/O @Ph4seon3 for the awesome edit 🙏\n\n#ai #programming #coding",
+      "transcript": "transcripts/3OshsLm3_OQ.txt",
+      "transcript_attempts": 0,
+      "added_at": "2026-10-20T22:48:29+00:00"
     }
   },
-  "last_fetch": "2026-10-20T01:50:33+00:00"
+  "last_fetch": "2026-10-20T22:49:32+00:00"
 }
