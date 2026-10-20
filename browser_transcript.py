@@ -35,6 +35,8 @@ MAX_RELOADS = 2
 # 正片已播放这么久仍没有字幕请求：关掉再打开字幕（最多 MAX_RESTARTS 次），仍不行再刷新页面
 CAPTION_GRACE = 15       # 秒
 MAX_RESTARTS = 2
+# 片头广告播放的时间不计入 CAPTION_TIMEOUT；同一页面广告累计超过这么久就刷新页面
+MAX_AD_SECONDS = 240
 
 _VIDEO_STATE_JS = """() => {
   const p = document.querySelector('#movie_player');
@@ -69,7 +71,7 @@ _DRIVE_PLAYER_JS = """(lang) => {
   if (!p || !p.getOption) return 'noplayer';
   p.mute(); p.playVideo();
   if (p.classList.contains('ad-showing')) {
-    document.querySelector('.ytp-skip-ad-button, .ytp-ad-skip-button-modern')?.click();
+    document.querySelector('.ytp-skip-ad-button, .ytp-ad-skip-button-modern, .ytp-ad-skip-button, [id^="skip-button"] button')?.click();
     return 'ad';
   }
   p.loadModule('captions');
@@ -312,22 +314,32 @@ class BrowserSession:
             page.wait_for_timeout(random.uniform(*BEFORE_CAPTIONS) * 1000)
             deadline = time.time() + CAPTION_TIMEOUT
             reloads = restarts = 0
-            last_t, last_move, watched = None, time.time(), 0
+            last_t, last_move, watched, ad_seconds = None, time.time(), 0, 0.0
             vs = {}
 
             def reload() -> None:
-                nonlocal reloads, restarts, last_t, last_move, watched, deadline
+                nonlocal reloads, restarts, last_t, last_move, watched, ad_seconds, deadline
                 reloads += 1
                 page.reload(wait_until="domcontentloaded", timeout=60000)
                 page.wait_for_selector("#movie_player", timeout=60000)
                 page.wait_for_timeout(random.uniform(*BEFORE_CAPTIONS) * 1000)
-                restarts, last_t, last_move, watched = 0, None, time.time(), 0
+                restarts, last_t, last_move, watched, ad_seconds = 0, None, time.time(), 0, 0.0
                 deadline = max(deadline, time.time() + CAPTION_TIMEOUT / 2)
 
             while not hits and time.time() < deadline:
+                tick = time.time()
                 page.evaluate(_DRIVE_PLAYER_JS, lang)
                 page.wait_for_timeout(1000)
                 vs = page.evaluate(_VIDEO_STATE_JS)
+                if vs["ad"]:
+                    # 广告时间不计入等待字幕的时限（长广告或连播多条广告）
+                    spent = time.time() - tick
+                    ad_seconds += spent
+                    if ad_seconds <= MAX_AD_SECONDS:
+                        deadline += spent
+                    elif reloads < MAX_RELOADS:
+                        reload()
+                        continue
                 if vs["t"] != last_t:
                     last_t, last_move = vs["t"], time.time()
                     if not vs["ad"]:
@@ -347,7 +359,8 @@ class BrowserSession:
             if not hits:
                 raise RuntimeError(
                     f"player did not request captions in time (reloads: {reloads}, restarts: {restarts}, "
-                    f"ad: {vs.get('ad')}, t: {vs.get('t')}, other timedtext: {self._seen})")
+                    f"ad: {vs.get('ad')}, ad seconds: {ad_seconds:.0f}, t: {vs.get('t')}, "
+                    f"other timedtext: {self._seen})")
 
             resp = hits[0]
             if resp.status == 429:
