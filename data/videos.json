@@ -298,7 +298,20 @@
       "transcript": "transcripts/3OshsLm3_OQ.txt",
       "transcript_attempts": 0,
       "added_at": "2026-10-20T22:48:29+00:00"
+    },
+    "USeyDcWyVCc": {
+      "id": "USeyDcWyVCc",
+      "title": "Even The NSA Got Involved",
+      "url": "https://www.youtube.com/watch?v=USeyDcWyVCc",
+      "upload_date": "20261022",
+      "published": "2026-10-22T19:14:45+00:00",
+      "duration": 1762,
+      "thumbnail": "https://i.ytimg.com/vi/USeyDcWyVCc/mqdefault.jpg",
+      "description": "Everything seems like it's gotten hacked, on an unprecedented day in software history. We have to talk about it\n\nThank you Coderabbit for sponsoring! Check them out at: https://soydev.link/coderabbit\n\nWant to sponsor a video? Learn more here: https://soydev.link/sponsor-me\n\nCheck out my Twitch, Twitter, Discord more at https://t3.gg\n\nS/O @Ph4seon3 for the awesome edit 🙏",
+      "transcript": "transcripts/USeyDcWyVCc.txt",
+      "transcript_attempts": 0,
+      "added_at": "2026-10-22T23:39:33+00:00"
     }
   },
-  "last_fetch": "2026-10-21T23:18:25+00:00"
+  "last_fetch": "2026-10-22T23:41:32+00:00"
 }
