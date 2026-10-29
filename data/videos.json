@@ -350,7 +350,20 @@
       "transcript": "transcripts/NBCM_ZoWZo8.txt",
       "transcript_attempts": 0,
       "added_at": "2026-10-28T23:05:32+00:00"
+    },
+    "uLGxb4F3SyI": {
+      "id": "uLGxb4F3SyI",
+      "title": "T3 Code broke me",
+      "url": "https://www.youtube.com/watch?v=uLGxb4F3SyI",
+      "upload_date": "20261029",
+      "published": "2026-10-29T17:34:08+00:00",
+      "duration": 2509,
+      "thumbnail": "https://i.ytimg.com/vi/uLGxb4F3SyI/mqdefault.jpg",
+      "description": "T3 Code has broken over 700,000 users, so I think it's time to give ya'll a tutorial on how I use it since I'm still contributing to it\n\nThank you to Apify for Sponsoring! Check them out: https://soydev.link/apify\n\nWant to sponsor a video? Learn more here: https://soydev.link/sponsor-me\n\nCheck out my Twitch, Twitter, Discord more at https://t3.gg\n\nS/O @Ph4seon3 for the awesome edit 🙏\n\n#ai #programming #coding",
+      "transcript": "transcripts/uLGxb4F3SyI.txt",
+      "transcript_attempts": 0,
+      "added_at": "2026-10-29T23:20:38+00:00"
     }
   },
-  "last_fetch": "2026-10-28T23:06:19+00:00"
+  "last_fetch": "2026-10-29T23:23:00+00:00"
 }
