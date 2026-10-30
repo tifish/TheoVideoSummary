@@ -363,7 +363,20 @@
       "transcript": "transcripts/uLGxb4F3SyI.txt",
       "transcript_attempts": 0,
       "added_at": "2026-10-29T23:20:38+00:00"
+    },
+    "ebILGCoN4UU": {
+      "id": "ebILGCoN4UU",
+      "title": "Are Harnesses Dead?",
+      "url": "https://www.youtube.com/watch?v=ebILGCoN4UU",
+      "upload_date": "20261030",
+      "published": "2026-10-30T21:42:50+00:00",
+      "duration": 2969,
+      "thumbnail": "https://i.ytimg.com/vi/ebILGCoN4UU/mqdefault.jpg",
+      "description": "Here we go again, it seems like there's no single \"resource\" that properly explains what a harness actually is, so I made a video about it\n\nThank you to Vercel for sponsoring the vid! Check them out: https://soydev.link/eve \n\nWant to sponsor a video? Learn more here: https://soydev.link/sponsor-me\n\nCheck out my article on Harnesses here too:\nhttps://x.com/theo/status/2113424203345265053\n\nCheck out my Twitch, Twitter, Discord more at https://t3.gg\n\nS/O @Ph4seon3 for the awesome edit 🙏\n\n#ai #programming #coding",
+      "transcript": "transcripts/ebILGCoN4UU.txt",
+      "transcript_attempts": 0,
+      "added_at": "2026-10-30T22:47:33+00:00"
     }
   },
-  "last_fetch": "2026-10-29T23:23:00+00:00"
+  "last_fetch": "2026-10-30T22:50:40+00:00"
 }
