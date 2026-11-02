@@ -376,7 +376,20 @@
       "transcript": "transcripts/ebILGCoN4UU.txt",
       "transcript_attempts": 0,
       "added_at": "2026-10-30T22:47:33+00:00"
+    },
+    "y5TEATUDDfc": {
+      "id": "y5TEATUDDfc",
+      "title": "Anthropic can't stop winning",
+      "url": "https://www.youtube.com/watch?v=y5TEATUDDfc",
+      "upload_date": "20261102",
+      "published": "2026-11-02T09:10:01+00:00",
+      "duration": 1006,
+      "thumbnail": "https://i.ytimg.com/vi/y5TEATUDDfc/mqdefault.jpg",
+      "description": "Anthropic has announced Claude Ultra, a rebrand on the $200 monthly tier while REMOVING 5 hour limits from verified accounts, which seems awesome, but the details matter, so lets break it down\n\nThank you to Greptile for Sponsoring: https://soydev.link/greptile\n\nWant to sponsor a video? Learn more here: https://soydev.link/sponsor-me\n\nCheck out my Twitch, Twitter, Discord more at https://t3.gg\n\nS/O @Ph4seon3 for the awesome edit 🙏",
+      "transcript": "transcripts/y5TEATUDDfc.txt",
+      "transcript_attempts": 0,
+      "added_at": "2026-11-02T22:35:28+00:00"
     }
   },
-  "last_fetch": "2026-11-01T22:58:25+00:00"
+  "last_fetch": "2026-11-02T22:37:37+00:00"
 }
