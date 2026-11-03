@@ -389,7 +389,33 @@
       "transcript": "transcripts/y5TEATUDDfc.txt",
       "transcript_attempts": 0,
       "added_at": "2026-11-02T22:35:28+00:00"
+    },
+    "xq0eB8vxeqk": {
+      "id": "xq0eB8vxeqk",
+      "title": "Agents Sucked At UI (Until Today)",
+      "url": "https://www.youtube.com/watch?v=xq0eB8vxeqk",
+      "upload_date": "20261103",
+      "published": "2026-11-03T23:00:28+00:00",
+      "duration": 1904,
+      "thumbnail": "https://i.ytimg.com/vi/xq0eB8vxeqk/mqdefault.jpg",
+      "description": "It’s time to make agents good at design, so let’s breakdown how I made Opus hill climb till it finally was making what I wanted it to\n\nThank you Magic Patterns for sponsoring the video! Check them out at: https://soydev.link/magicpatterns\n\nWant to sponsor a video? Learn more here: https://soydev.link/sponsor-me\n\nCheck out my Twitch, Twitter, Discord more at https://t3.gg\n\nS/O @Ph4seon3 for the awesome edit 🙏\n\n#ai #programming #coding",
+      "transcript": "transcripts/xq0eB8vxeqk.txt",
+      "transcript_attempts": 0,
+      "added_at": "2026-11-03T23:49:29+00:00"
+    },
+    "Hq2c7pww1Ds": {
+      "id": "Hq2c7pww1Ds",
+      "title": "OpenAI is getting desperate",
+      "url": "https://www.youtube.com/watch?v=Hq2c7pww1Ds",
+      "upload_date": "20261102",
+      "published": "2026-11-03T05:05:32+00:00",
+      "duration": 950,
+      "thumbnail": "https://i.ytimg.com/vi/Hq2c7pww1Ds/mqdefault.jpg",
+      "description": "Just a month after their reduction, OpenAI is doubling the limits of their plans. Is it enough? \n\nThanks to WorkOS for sponsoring! Check passport out here: soydev.link/passport\n\nWant to sponsor a video? Learn more here: https://soydev.link/sponsor-me\n\nCheck out my Twitch, Twitter, Discord more at https://t3.gg\n\nS/O @Ph4seon3 for the awesome edit 🙏\n\n#ai #programming #coding",
+      "transcript": "transcripts/Hq2c7pww1Ds.txt",
+      "transcript_attempts": 0,
+      "added_at": "2026-11-03T23:52:34+00:00"
     }
   },
-  "last_fetch": "2026-11-02T22:37:37+00:00"
+  "last_fetch": "2026-11-03T23:53:36+00:00"
 }
