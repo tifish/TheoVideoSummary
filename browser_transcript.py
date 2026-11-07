@@ -1,11 +1,10 @@
-"""用真实的 Chrome（专用、已登录小号的配置）获取字幕。
+"""通过 Playwright 连接日常使用的 Edge，复用默认配置中的 YouTube 登录状态。
 
 做法与真人看视频一致：打开视频页 → 通过播放器开启英文字幕 → 截获播放器自己
 发出的 timedtext 请求（带登录 cookies 与 PO Token）。不伪造任何请求。
 
-Chrome 以普通方式启动（不带 Playwright 的自动化启动参数，navigator.webdriver 为 false），
-脚本只通过本地调试端口连接。由 Playwright 直接启动的 Chrome 会被 YouTube 识别，
-字幕请求返回空内容。
+Edge 以普通方式启动，Playwright 通过本地调试端口连接。
+首次连接前须退出未开启调试端口的 Edge；任务结束只关闭任务自己的标签页。
 
 首次使用先登录：python fetch.py --login
 """
@@ -15,7 +14,6 @@ from __future__ import annotations
 import json
 import os
 import random
-import socket
 import subprocess
 import urllib.request
 import time
@@ -24,8 +22,7 @@ from pathlib import Path
 from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
 
 ROOT = Path(__file__).resolve().parent
-PROFILE_DIR = ROOT / ".browser-profile"
-# 本机 Edge 有 UserDataDir 组策略，无法启动独立配置，所以用 Chrome
+PROFILE_DIR = Path(os.environ["LOCALAPPDATA"]) / "Microsoft/Edge/User Data"
 CAPTION_TIMEOUT = 90  # 秒；等待播放器发出字幕请求（含片头广告）
 # 模拟真人观看节奏：打开后先看一会儿再开字幕，拿到字幕后继续播放一段时间再关闭
 BEFORE_CAPTIONS = (2, 5)  # 秒
@@ -104,74 +101,59 @@ def is_logged_in(context) -> bool:
     return any(c["name"] in ("LOGIN_INFO", "SAPISID") for c in context.cookies("https://www.youtube.com"))
 
 
-def _free_port() -> int:
-    with socket.socket() as s:
-        s.bind(("127.0.0.1", 0))
-        return s.getsockname()[1]
-
-
-class _Chrome:
-    """以普通方式启动 Chrome 打开专用配置，并通过本地调试端口连接。"""
+class _Edge:
+    """连接或启动默认 Edge；不复制配置，也不关闭用户的浏览器。"""
 
     def __init__(self, pw) -> None:
-        port = _free_port()
+        # Edge 使用随机调试端口时，会在默认数据目录记录连接地址。
+        try:
+            lines = (PROFILE_DIR / "DevToolsActivePort").read_text().splitlines()
+            existing_port = int(lines[0])
+            endpoint = f"http://127.0.0.1:{existing_port}"
+            with urllib.request.urlopen(endpoint + "/json/version", timeout=1):
+                pass
+        except (OSError, ValueError, IndexError):
+            endpoint = None
+        if endpoint:
+            self.browser = pw.chromium.connect_over_cdp(endpoint)
+            self.context = self.browser.contexts[0]
+            return
+
         self.proc = subprocess.Popen([
-            _chrome_exe(), f"--user-data-dir={PROFILE_DIR}", f"--remote-debugging-port={port}",
-            "--no-first-run", "--no-default-browser-check", "--mute-audio", "about:blank",
+            _edge_exe(), "--remote-debugging-port=0",
+            "--no-first-run", "--no-default-browser-check", "about:blank",
         ])
-        endpoint = f"http://127.0.0.1:{port}"
         for _ in range(60):
             if self.proc.poll() is not None:
-                raise RuntimeError("Chrome exited at startup (is the .browser-profile window already open?)")
+                raise RuntimeError("Edge is already running without remote debugging; fully exit Edge, then rerun python fetch.py")
             try:
-                urllib.request.urlopen(endpoint + "/json/version", timeout=1)
+                lines = (PROFILE_DIR / "DevToolsActivePort").read_text().splitlines()
+                port = int(lines[0])
+                endpoint = f"http://127.0.0.1:{port}"
+                with urllib.request.urlopen(endpoint + "/json/version", timeout=1):
+                    pass
                 break
-            except OSError:
+            except (OSError, ValueError, IndexError):
                 time.sleep(0.5)
         else:
-            self.proc.kill()
-            raise RuntimeError("Chrome debugging port did not come up")
+            raise RuntimeError("Edge debugging port did not come up; fully exit Edge (including background processes) and retry")
         self.browser = pw.chromium.connect_over_cdp(endpoint)
         self.context = self.browser.contexts[0]
 
-    def close(self) -> None:
-        try:
-            self.browser.new_browser_cdp_session().send("Browser.close")
-        except Exception:  # noqa: BLE001
-            pass
-        try:
-            self.proc.wait(timeout=20)
-        except subprocess.TimeoutExpired:
-            self.proc.kill()
-
-
-def _chrome_exe() -> str:
+def _edge_exe() -> str:
     for base in (os.environ.get("PROGRAMFILES"), os.environ.get("PROGRAMFILES(X86)"), os.environ.get("LOCALAPPDATA")):
-        if base and (p := Path(base) / "Google/Chrome/Application/chrome.exe").exists():
+        if base and (p := Path(base) / "Microsoft/Edge/Application/msedge.exe").exists():
             return str(p)
-    raise FileNotFoundError("Google Chrome not found")
+    raise FileNotFoundError("Microsoft Edge not found")
 
 
 def login() -> None:
-    """以普通方式（非自动化）启动 Chrome 打开专用配置，让用户手动登录 YouTube。
-
-    Google 会拒绝在自动化控制的浏览器中登录，所以登录这一步不经过 Playwright；
-    之后抓字幕时由 Playwright 复用该配置中保存的登录状态。
-    """
-    print("请在弹出的 Chrome 窗口中登录 YouTube 小号，登录完成后关闭整个浏览器窗口。", flush=True)
-    subprocess.run([
-        _chrome_exe(), f"--user-data-dir={PROFILE_DIR}", "--no-first-run", "--no-default-browser-check",
+    """打开日常 Edge，供用户手动登录；抓取时复用该默认配置。"""
+    print("请在默认 Edge 中登录 YouTube。登录后完全退出 Edge，再运行 python fetch.py。", flush=True)
+    subprocess.Popen([
+        _edge_exe(), "--no-first-run", "--no-default-browser-check",
         "https://accounts.google.com/ServiceLogin?service=youtube&continue=https://www.youtube.com/",
     ])
-    time.sleep(2)  # 等 Chrome 写完 cookies
-
-    from playwright.sync_api import sync_playwright
-
-    with sync_playwright() as pw:
-        chrome = _Chrome(pw)
-        logged = is_logged_in(chrome.context)
-        chrome.close()
-    print("登录状态：" + ("已登录 ✓" if logged else "未检测到登录，请重新运行 python fetch.py --login"))
 
 
 def _pick_lang(tracks: list[dict]) -> str | None:
@@ -185,7 +167,7 @@ class BrowserSession:
 
     def __init__(self) -> None:
         self._pw = None
-        self._chrome = None
+        self._edge = None
         self._page = self._page_vid = None
         self._hits: list = []
 
@@ -200,25 +182,24 @@ class BrowserSession:
         return True
 
     def _context(self):
-        if self._chrome is None:
+        if self._edge is None:
             from playwright.sync_api import sync_playwright
 
             self._pw = self._pw or sync_playwright().start()
-            self._chrome = _Chrome(self._pw)
-            if not is_logged_in(self._chrome.context):
+            self._edge = _Edge(self._pw)
+            if not is_logged_in(self._edge.context):
                 raise RuntimeError("browser profile is not logged in; run: python fetch.py --login")
-        return self._chrome.context
+        return self._edge.context
 
     def close(self) -> None:
         self._close_page()
-        if self._chrome is not None:
-            self._chrome.close()
+        # 停止 Playwright 连接，保留默认 Edge 和用户的其他标签页。
         if self._pw is not None:
             try:
                 self._pw.stop()
             except Exception:  # noqa: BLE001
                 pass
-        self._chrome = self._pw = None
+        self._edge = self._pw = None
 
     def _close_page(self) -> None:
         if self._page is not None:
