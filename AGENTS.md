@@ -4,6 +4,8 @@
 
 当你（AI agent）被要求"运行 / 更新 / 执行任务"时，按下面的步骤做完整一轮。
 
+本机使用项目虚拟环境：以下所有 `python` 命令均使用 `.\.venv\Scripts\python.exe`。不要使用指向 Microsoft Store 的系统 `python` 占位程序。
+
 ## 每轮流程
 
 1. **抓取新视频与字幕**
@@ -15,7 +17,7 @@
    - 默认扫描频道最新 15 个视频；要补更多历史视频用 `python fetch.py --limit 40`。
    - 输出末尾的 `PENDING_SUMMARIES` 列表就是本轮要总结的视频（字幕已下载、但还没有总结）。
    - 只想看待办、不联网：`python fetch.py --status`。
-   - 所有对 YouTube 的访问（频道列表、视频详情、字幕）都通过 Playwright 连接日常使用的默认 Edge，复用其中的 YouTube 登录状态，不使用任何匿名接口。若 Edge 已带调试端口运行，会直接复用；否则脚本启动 Edge。首次使用前需要完全退出未开启调试端口的 Edge（包括后台进程）。任务结束仅关闭任务自己的标签页并断开连接，不关闭用户的 Edge。日志出现 `browser profile is not logged in` 或 `browser profile not set up` 时，在汇报中提醒用户运行 `python fetch.py --login` 登录。
+   - 所有对 YouTube 的访问（频道列表、视频详情、字幕）都通过 Playwright 扩展连接日常使用的默认 Edge，复用其中的 YouTube 登录状态，不使用任何匿名接口。进程需继承 `PLAYWRIGHT_MCP_EXTENSION_TOKEN` 环境变量；token 只在环境中传递，不输出或写入仓库。无需手动开启调试端口或退出 Edge。任务结束仅关闭任务自己的标签页并断开桥接，不关闭用户的 Edge。可用 `python fetch.py --check-browser` 验证连接和频道访问（不修改视频数据）。日志出现登录异常时，提醒运行 `python fetch.py --login`；缺少 token 或 Python Playwright 时应明确报告依赖问题，不误报为未登录。
    - 输出 `TRANSCRIPT_BLOCKED` 表示 YouTube 限流了本机 IP 的字幕请求：脚本已自动停止本轮字幕抓取且不计入失败次数，**不要**反复重试，在汇报中说明即可，下次运行会自动重试。
 
 2. **逐个总结**：对每个待总结视频
@@ -104,6 +106,7 @@ python -c "import json,glob,collections;c=collections.Counter(t for f in glob.gl
 |---|---|
 | `fetch.py` | 列出频道新视频、下载字幕，维护 `data/videos.json` |
 | `browser_transcript.py` | 通过 Playwright 连接默认 Edge：读取频道列表与视频详情，打开视频、开启字幕并截获字幕数据 |
+| `edge_extension_bridge.cjs` | 使用 Python Playwright 自带 Node 驱动和官方扩展桥接，提供仅监听本机的临时连接 |
 | `build.py` | 校验 `summaries/*.json` 并生成 `index.html` |
 | `next_run.py` | 随机生成下一次定时运行时间（06:30–08:00，排除当天），供定时任务结束时重新排期 |
 | `templates/index.template.html` | 索引页模板（数据由 build.py 内嵌） |
@@ -112,7 +115,7 @@ python -c "import json,glob,collections;c=collections.Counter(t for f in glob.gl
 | `summaries/<id>.json` | 总结（agent 写入） |
 | `index.html` | 生成的索引页 |
 
-依赖：Python 3.10+，`pip install -U playwright`（抓取失败时先升级），以及本机安装的 Microsoft Edge。默认 Edge 中尚未登录 YouTube 时运行 `python fetch.py --login`。首次抓取前完全退出 Edge，以便脚本开启本地调试端口。
+依赖：Python 3.10+、`requirements.txt` 中固定版本的 Playwright、本机 Microsoft Edge 和其 Playwright 扩展。无需另外下载浏览器或安装 Node/npm 包。默认 Edge 中尚未登录 YouTube 时运行 `python fetch.py --login`；一次性在用户环境变量中设置扩展状态页提供的 `PLAYWRIGHT_MCP_EXTENSION_TOKEN`，然后重启运行任务的 T3，使其继承变量。桥接使用版本相关接口，升级 Playwright 后需要重新运行连接检查和字幕检查。
 
 重新总结某个视频：删除 `summaries/<id>.json` 后重新跑流程即可。
 字幕连续失败 5 次（被限流不计入）的视频会被跳过；要重试，把 `data/videos.json` 中该视频的 `transcript_attempts` 改为 0。

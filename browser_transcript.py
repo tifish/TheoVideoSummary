@@ -3,8 +3,8 @@
 做法与真人看视频一致：打开视频页 → 通过播放器开启英文字幕 → 截获播放器自己
 发出的 timedtext 请求（带登录 cookies 与 PO Token）。不伪造任何请求。
 
-Edge 以普通方式启动，Playwright 通过本地调试端口连接。
-首次连接前须退出未开启调试端口的 Edge；任务结束只关闭任务自己的标签页。
+通过 Edge 中的 Playwright 扩展自动连接，不需要手动开启调试端口或重启 Edge。
+需一次性设置 PLAYWRIGHT_MCP_EXTENSION_TOKEN；任务结束只关闭自己的标签页。
 
 首次使用先登录：python fetch.py --login
 """
@@ -15,7 +15,8 @@ import json
 import os
 import random
 import subprocess
-import urllib.request
+import queue
+import threading
 import time
 from datetime import datetime
 from pathlib import Path
@@ -102,43 +103,51 @@ def is_logged_in(context) -> bool:
 
 
 class _Edge:
-    """连接或启动默认 Edge；不复制配置，也不关闭用户的浏览器。"""
+    """用官方扩展桥接默认 Edge；不复制配置或关闭用户浏览器。"""
 
     def __init__(self, pw) -> None:
-        # Edge 使用随机调试端口时，会在默认数据目录记录连接地址。
-        try:
-            lines = (PROFILE_DIR / "DevToolsActivePort").read_text().splitlines()
-            existing_port = int(lines[0])
-            endpoint = f"http://127.0.0.1:{existing_port}"
-            with urllib.request.urlopen(endpoint + "/json/version", timeout=1):
-                pass
-        except (OSError, ValueError, IndexError):
-            endpoint = None
-        if endpoint:
-            self.browser = pw.chromium.connect_over_cdp(endpoint)
-            self.context = self.browser.contexts[0]
-            return
+        from playwright._impl._driver import compute_driver_executable
 
-        self.proc = subprocess.Popen([
-            _edge_exe(), "--remote-debugging-port=0",
-            "--no-first-run", "--no-default-browser-check", "about:blank",
-        ])
-        for _ in range(60):
-            if self.proc.poll() is not None:
-                raise RuntimeError("Edge is already running without remote debugging; fully exit Edge, then rerun python fetch.py")
-            try:
-                lines = (PROFILE_DIR / "DevToolsActivePort").read_text().splitlines()
-                port = int(lines[0])
-                endpoint = f"http://127.0.0.1:{port}"
-                with urllib.request.urlopen(endpoint + "/json/version", timeout=1):
-                    pass
-                break
-            except (OSError, ValueError, IndexError):
-                time.sleep(0.5)
-        else:
-            raise RuntimeError("Edge debugging port did not come up; fully exit Edge (including background processes) and retry")
-        self.browser = pw.chromium.connect_over_cdp(endpoint)
-        self.context = self.browser.contexts[0]
+        if not os.environ.get("PLAYWRIGHT_MCP_EXTENSION_TOKEN"):
+            raise RuntimeError("PLAYWRIGHT_MCP_EXTENSION_TOKEN not set; configure the Edge extension token for unattended access")
+        node, driver = compute_driver_executable()
+        env = os.environ.copy()
+        env.pop("DEBUG", None)  # 避免第三方调试日志输出带 token 的连接 URL。
+        self.proc = subprocess.Popen(
+            [node, str(ROOT / "edge_extension_bridge.cjs"),
+             str(Path(driver).parent / "lib/coreBundle.js")],
+            cwd=ROOT, env=env, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL, text=True, encoding="utf-8",
+            creationflags=subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0,
+        )
+        ready = queue.Queue()
+        threading.Thread(target=lambda: ready.put(self.proc.stdout.readline()), daemon=True).start()
+        try:
+            line = ready.get(timeout=50)
+            if not line:
+                raise RuntimeError("Edge extension bridge exited before connecting")
+            result = json.loads(line)
+            if result.get("error"):
+                raise RuntimeError(result["error"])
+            self.browser = pw.chromium.connect(result["endpoint"], timeout=30000)
+            self.context = self.browser.contexts[0]
+        except queue.Empty:
+            self.close()
+            raise RuntimeError("Edge extension bridge timed out") from None
+        except Exception:
+            self.close()
+            raise
+
+    def close(self) -> None:
+        if self.proc.stdin and not self.proc.stdin.closed:
+            self.proc.stdin.close()
+        try:
+            self.proc.wait(timeout=5)
+        except subprocess.TimeoutExpired:
+            self.proc.kill()  # 仅终止本任务的 Node 桥接子进程，不终止 Edge。
+            self.proc.wait(timeout=5)
+        if self.proc.stdout:
+            self.proc.stdout.close()
 
 def _edge_exe() -> str:
     for base in (os.environ.get("PROGRAMFILES"), os.environ.get("PROGRAMFILES(X86)"), os.environ.get("LOCALAPPDATA")):
@@ -149,7 +158,7 @@ def _edge_exe() -> str:
 
 def login() -> None:
     """打开日常 Edge，供用户手动登录；抓取时复用该默认配置。"""
-    print("请在默认 Edge 中登录 YouTube。登录后完全退出 Edge，再运行 python fetch.py。", flush=True)
+    print("请在默认 Edge 中登录 YouTube；安装 Playwright 扩展并设置其 token 后即可自动抓取，无需退出 Edge。", flush=True)
     subprocess.Popen([
         _edge_exe(), "--no-first-run", "--no-default-browser-check",
         "https://accounts.google.com/ServiceLogin?service=youtube&continue=https://www.youtube.com/",
@@ -199,6 +208,8 @@ class BrowserSession:
                 self._pw.stop()
             except Exception:  # noqa: BLE001
                 pass
+        if self._edge is not None:
+            self._edge.close()
         self._edge = self._pw = None
 
     def _close_page(self) -> None:

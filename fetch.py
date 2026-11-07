@@ -240,9 +240,18 @@ def main() -> None:
     ap.add_argument("--limit", type=int, default=DEFAULT_LIMIT, help="扫描频道最新 N 个视频")
     ap.add_argument("--status", action="store_true", help="只显示待总结列表")
     ap.add_argument("--login", action="store_true", help="在默认 Edge 配置中登录 YouTube")
+    ap.add_argument("--check-browser", action="store_true", help="验证扩展连接和频道访问，不修改视频数据")
     args = ap.parse_args()
     if args.login:
         login()
+        return
+    if args.check_browser:
+        browser = BrowserSession()
+        try:
+            entries = browser.list_videos(CHANNEL_URL, 1)
+            print(f"BROWSER_OK: logged in; channel entries={len(entries)}")
+        finally:
+            browser.close()
         return
     if not args.status:
         sync(args.limit)

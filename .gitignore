@@ -1,4 +1,5 @@
 transcripts/
 __pycache__/
+.venv/
 *.tmp
 .browser-profile/

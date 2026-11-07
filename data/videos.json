@@ -415,7 +415,33 @@
       "transcript": "transcripts/Hq2c7pww1Ds.txt",
       "transcript_attempts": 0,
       "added_at": "2026-11-03T23:52:34+00:00"
+    },
+    "TFCDWrEBaFM": {
+      "id": "TFCDWrEBaFM",
+      "title": "How Claude Fixes It's Own Code",
+      "url": "https://www.youtube.com/watch?v=TFCDWrEBaFM",
+      "upload_date": "20261106",
+      "published": "2026-11-06T23:00:39+00:00",
+      "duration": 2534,
+      "thumbnail": "https://i.ytimg.com/vi/TFCDWrEBaFM/mqdefault.jpg",
+      "description": "Anthropic released an article on their Code Review process and since T3 Code has seen as many as 800 pull requests filed in a day, lets compare their process to what I've experienced recently and see what differs!\n\nThank you to Browserbase for Sponsoring! Check them out here:\nhttps://soydev.link/browserbase\n\nSource:\nhttps://claude.dev/blog/solving-code-review-at-anthropic/\n\nWant to sponsor a video? Learn more here: https://soydev.link/sponsor-me\n\nCheck out my Twitch, Twitter, Discord more at https://t3.gg\n\nS/O @Ph4seon3 for the awesome edit 🙏",
+      "transcript": "transcripts/TFCDWrEBaFM.txt",
+      "transcript_attempts": 0,
+      "added_at": "2026-11-07T05:46:54+00:00"
+    },
+    "tc8GNdrhozA": {
+      "id": "tc8GNdrhozA",
+      "title": "I can't believe Pewdiepie made this",
+      "url": "https://www.youtube.com/watch?v=tc8GNdrhozA",
+      "upload_date": "20261105",
+      "published": "2026-11-05T08:36:45+00:00",
+      "duration": 2462,
+      "thumbnail": "https://i.ytimg.com/vi/tc8GNdrhozA/mqdefault.jpg",
+      "description": "OpenAI banned PewdiePie TWICE while he was building his own AI systems and the technical work behind it has me impressed, so lets see what he actually made and whether or not you should use it\n\nThank you Clerk for sponsoring! Check them out at: https://soydev.link/clerk\n\nSources:\nhttps://youtu.be/ODDJXGY_1kQ?si=Ka5jtWF7l3RiJ3EG\n\nWant to sponsor a video? Learn more here: https://soydev.link/sponsor-me\n\nCheck out my Twitch, Twitter, Discord more at https://t3.gg\n\nS/O @Ph4seon3 for the awesome edit 🙏",
+      "transcript": "transcripts/tc8GNdrhozA.txt",
+      "transcript_attempts": 0,
+      "added_at": "2026-11-07T05:48:48+00:00"
     }
   },
-  "last_fetch": "2026-11-04T23:55:24+00:00"
+  "last_fetch": "2026-11-07T05:49:22+00:00"
 }
