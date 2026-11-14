@@ -4,15 +4,17 @@
 
 在线浏览：https://tifish.github.io/TheoVideoSummary/
 
-## 自动访问 Edge
+## 通过 Browser MCP 访问浏览器
 
-抓取脚本通过 Edge 的 Playwright 扩展复用日常浏览器登录状态，无需手动开调试端口或每轮退出浏览器。
+抓取脚本通过 Python MCP 客户端调用 Browser MCP，复用扩展所连接的日常浏览器和 YouTube 登录状态。无需手动开调试端口或退出浏览器。
 
 一次性准备：
 
-1. 在 Edge 安装 Playwright 扩展并登录 YouTube。
-2. 将扩展状态页提供的 token 设置为用户环境变量 `PLAYWRIGHT_MCP_EXTENSION_TOKEN`，然后重启 T3。不要将 token 写入项目文件或提交到 Git。
-3. 使用 Python 创建 `.venv`，执行 `.\.venv\Scripts\python.exe -m pip install -r requirements.txt`。项目使用 Python Playwright 自带的 Node 驱动，无需另装浏览器或 Node/npm 包。
+1. 安装 Node.js/npm，确保 `npx` 在 PATH 中可用。
+2. 在日常浏览器安装并连接 Browser MCP 扩展，登录 YouTube。
+3. 使用 Python 3.10+ 创建 `.venv`，执行 `.\.venv\Scripts\python.exe -m pip install -r requirements.txt`。脚本用 `npx --yes @browsermcp/mcp@2.5.0` 启动 MCP 客户端服务；首次运行需要下载该包。
+
+项目不再依赖 Python Playwright、Playwright 扩展或 `PLAYWRIGHT_MCP_EXTENSION_TOKEN`。不需要另装自动化浏览器。
 
 检查连接和日常运行：
 
@@ -22,9 +24,9 @@
 .\.venv\Scripts\python.exe build.py
 ```
 
-任务只关闭自己创建的标签页，保留用户的 Edge。token 缺失时会直接报告错误，不弹出等待确认的连接流程。YouTube 登录失效、验证码或限流仍可能中断任务。
+任务在后台创建标签页，不切换用户正在使用的标签页；进入视频前安装静音逻辑，获取字幕后立即暂停。任务只关闭自己创建的标签页，不关闭浏览器或共享 Browser MCP 服务。`--login` 会保留登录页供用户操作。扩展未连接、YouTube 登录失效、验证码或限流仍可能中断任务。
 
-扩展桥接使用 Playwright 版本相关接口，因此依赖固定版本；升级后需重新验证连接及字幕抓取。
+字幕仅来自播放器自然发出的响应，不重放字幕请求。长字幕分块传回 Python，并检查长度、事件数量和末尾时间，避免 MCP 输出截断。Python MCP SDK 和 Browser MCP 使用固定版本，升级后需重新验证连接及完整字幕抓取。
 
 - 字幕由 `fetch.py` 抓取（仅保存在本地，不发布）
 - 总结由 AI agent 按 [AGENTS.md](AGENTS.md) 的规范生成，存放于 `summaries/`

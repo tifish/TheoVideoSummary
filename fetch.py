@@ -4,7 +4,7 @@
     python fetch.py              # 检查最新视频，下载新视频字幕
     python fetch.py --limit 30   # 扫描频道最新 30 个视频（用于补历史）
     python fetch.py --status     # 只打印待总结列表，不联网
-    python fetch.py --login      # 在日常使用的默认 Edge 中登录 YouTube
+    python fetch.py --login      # 在 Browser MCP 扩展连接的浏览器中登录 YouTube
 
 产物:
     data/videos.json            所有视频的元数据与状态（唯一状态源）
@@ -62,7 +62,7 @@ def fmt_ts(seconds: float) -> str:
 
 
 # ---------------------------------------------------------------- transcripts
-# 所有对 YouTube 的访问都通过已登录的默认 Edge（browser_transcript.py），不使用匿名接口。
+# 所有对 YouTube 的访问都通过 Browser MCP 连接已登录浏览器，不使用匿名接口。
 
 def parse_json3(data: dict) -> list[tuple[float, str]]:
     out = []
@@ -123,8 +123,7 @@ def sync(limit: int) -> None:
     TRANSCRIPT_DIR.mkdir(exist_ok=True)
     SUMMARY_DIR.mkdir(exist_ok=True)
 
-    if not BrowserSession.available():
-        raise SystemExit("browser profile not set up: run python fetch.py --login first")
+    BrowserSession.require_dependencies()
     browser = BrowserSession()
     try:
         _sync(limit, db, videos, browser)
@@ -239,7 +238,7 @@ def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--limit", type=int, default=DEFAULT_LIMIT, help="扫描频道最新 N 个视频")
     ap.add_argument("--status", action="store_true", help="只显示待总结列表")
-    ap.add_argument("--login", action="store_true", help="在默认 Edge 配置中登录 YouTube")
+    ap.add_argument("--login", action="store_true", help="在 Browser MCP 扩展连接的浏览器中登录 YouTube")
     ap.add_argument("--check-browser", action="store_true", help="验证扩展连接和频道访问，不修改视频数据")
     args = ap.parse_args()
     if args.login:
