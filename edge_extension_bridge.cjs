@@ -25,7 +25,24 @@ process.on('SIGINT', stop);
 
 (async () => {
   if (!token) throw new Error('PLAYWRIGHT_MCP_EXTENSION_TOKEN is not configured.');
-  const {tools} = require(process.argv[2]);
+  // The pinned extension adapter omits chrome.tabs.create's active option.
+  // Load a process-local copy with background tab creation; leave the installed
+  // Playwright package untouched. Fail explicitly if an upgrade changes this call.
+  const fs = require('node:fs');
+  const Module = require('node:module');
+  const path = require('node:path');
+  const bundlePath = path.resolve(process.argv[2]);
+  const source = fs.readFileSync(bundlePath, 'utf8');
+  const foregroundCreate = 'this._sendToExtension("chrome.tabs.create", [{ url: url3 }])';
+  if (source.split(foregroundCreate).length !== 2)
+    throw new Error('Playwright extension adapter changed; background tab creation needs review.');
+  const patched = source.replace(foregroundCreate,
+    'this._sendToExtension("chrome.tabs.create", [{ url: url3, active: false }])');
+  const bundle = new Module(bundlePath, module);
+  bundle.filename = bundlePath;
+  bundle.paths = Module._nodeModulePaths(path.dirname(bundlePath));
+  bundle._compile(patched, bundlePath);
+  const {tools} = bundle.exports;
   const options = {extension: true, browser: 'msedge'};
   const config = await tools.resolveCLIConfigForMCP(options, process.env);
   const info = await tools.createBrowserWithInfo(

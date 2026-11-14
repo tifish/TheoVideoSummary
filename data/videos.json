@@ -441,7 +441,72 @@
       "transcript": "transcripts/tc8GNdrhozA.txt",
       "transcript_attempts": 0,
       "added_at": "2026-11-07T05:48:48+00:00"
+    },
+    "5BrgFY5jIn4": {
+      "id": "5BrgFY5jIn4",
+      "title": "It’s so much worse than I thought…",
+      "url": "https://www.youtube.com/watch?v=5BrgFY5jIn4",
+      "upload_date": "20261113",
+      "published": "2026-11-13T23:45:49+00:00",
+      "duration": 1179,
+      "thumbnail": "https://i.ytimg.com/vi/5BrgFY5jIn4/mqdefault.jpg",
+      "description": "Gemini 4 Carbon is much slower than I initially thought, and it's bad enough that we need to talk about it\n\nThank you Infinite Red for sponsoring! Check them out here:\nhttps://soydev.link/infinite\n\nWant to sponsor a video? Learn more here: https://soydev.link/sponsor-me\n\nCheck out my Twitch, Twitter, Discord more at https://t3.gg\n\nS/O @Ph4seon3 for the awesome edit 🙏\n\n\nLocal Forecast - Slower by Kevin MacLeod\nLink: https://incompetech.filmmusic.io/song/3988-local-forecast---slower\nLicense: http://creativecommons.org/licenses/by/4.0\n\n#ai #programming #coding",
+      "transcript": "transcripts/5BrgFY5jIn4.txt",
+      "transcript_attempts": 0,
+      "added_at": "2026-11-14T01:28:31+00:00"
+    },
+    "XtykeVoSmP8": {
+      "id": "XtykeVoSmP8",
+      "title": "I think I figured it out",
+      "url": "https://www.youtube.com/watch?v=XtykeVoSmP8",
+      "upload_date": "20261112",
+      "published": "2026-11-13T02:34:12+00:00",
+      "duration": 2539,
+      "thumbnail": "https://i.ytimg.com/vi/XtykeVoSmP8/mqdefault.jpg",
+      "description": "With Opus 5.5 and Fable 5.2 finally out, it's time to break down what you should be using each one for, and how they work together\n\nThank you to Browserbase for Sponsoring! Check them out here:\nhttps://soydev.link/browserbase\n\nWant to sponsor a video? Learn more here: https://soydev.link/sponsor-me\n\nCheck out my Twitch, Twitter, Discord more at https://t3.gg\n\nS/O @Ph4seon3 for the awesome edit 🙏\n\n#ai #programming #coding",
+      "transcript": "transcripts/XtykeVoSmP8.txt",
+      "transcript_attempts": 0,
+      "added_at": "2026-11-14T01:30:13+00:00"
+    },
+    "OBNVzWYMKbE": {
+      "id": "OBNVzWYMKbE",
+      "title": "Progress?",
+      "url": "https://www.youtube.com/watch?v=OBNVzWYMKbE",
+      "upload_date": "20261111",
+      "published": "2026-11-11T15:50:36+00:00",
+      "duration": 1777,
+      "thumbnail": "https://i.ytimg.com/vi/OBNVzWYMKbE/mqdefault.jpg",
+      "description": "Google released Gemini 4 Carbon and honestly, it's not what I expected and it might prove Google is taking even more steps in the right direction, lets talk about it \n\nThanks to WorkOS for sponsoring! Check passport out here: https://soydev.link/workos\n\nWant to sponsor a video? Learn more here: https://soydev.link/sponsor-me\n\nCheck out my Twitch, Twitter, Discord more at https://t3.gg\n\nS/O @Ph4seon3 for the awesome edit 🙏\n\n#ai #programming #coding",
+      "transcript": "transcripts/OBNVzWYMKbE.txt",
+      "transcript_attempts": 0,
+      "added_at": "2026-11-14T01:31:46+00:00"
+    },
+    "yh5IAUow4Hc": {
+      "id": "yh5IAUow4Hc",
+      "title": "Nobody Is Competing With Anthropic",
+      "url": "https://www.youtube.com/watch?v=yh5IAUow4Hc",
+      "upload_date": "20261110",
+      "published": "2026-11-10T19:38:40+00:00",
+      "duration": 2900,
+      "thumbnail": "https://i.ytimg.com/vi/yh5IAUow4Hc/mqdefault.jpg",
+      "description": "Fable 5.2 may not be as big of a jump as Opus 5 to Opus 5.5, but Anthropic is still impressing me and I wanna break down why.\n\nThank you Blacksmith for sponsoring! Check them out at: https://soydev.link/blacksmith\n\nWant to sponsor a video? Learn more here: https://soydev.link/sponsor-me\n\nCheck out my Twitch, Twitter, Discord more at https://t3.gg\n\nS/O @Ph4seon3 for the awesome edit 🙏\n\n#ai #programming #coding",
+      "transcript": "transcripts/yh5IAUow4Hc.txt",
+      "transcript_attempts": 0,
+      "added_at": "2026-11-14T01:33:23+00:00"
+    },
+    "GtJKFhztgdM": {
+      "id": "GtJKFhztgdM",
+      "title": "Coding Isn't About Code Anymore",
+      "url": "https://www.youtube.com/watch?v=GtJKFhztgdM",
+      "upload_date": "20261108",
+      "published": "2026-11-09T06:41:14+00:00",
+      "duration": 2721,
+      "thumbnail": "https://i.ytimg.com/vi/GtJKFhztgdM/mqdefault.jpg",
+      "description": "AI has given engineers a new job, which is much more akin to gardening rather than coding, so let's talk about it\n\nThank you Coderabbit for sponsoring! Check them out at: https://soydev.link/coderabbit\n\nWant to sponsor a video? Learn more here: https://soydev.link/sponsor-me\n\nCheck out my Twitch, Twitter, Discord more at https://t3.gg\n\nS/O @Ph4seon3 for the awesome edit 🙏",
+      "transcript": "transcripts/GtJKFhztgdM.txt",
+      "transcript_attempts": 0,
+      "added_at": "2026-11-14T01:35:08+00:00"
     }
   },
-  "last_fetch": "2026-11-07T05:49:22+00:00"
+  "last_fetch": "2026-11-14T01:36:40+00:00"
 }

@@ -36,6 +36,26 @@ MAX_RESTARTS = 2
 # 片头广告播放的时间不计入 CAPTION_TIMEOUT；同一页面广告累计超过这么久就刷新页面
 MAX_AD_SECONDS = 240
 
+# ????????????????????????????????
+_MUTE_ON_OPEN_JS = """(() => {
+  const mute = (media) => {
+    if (media instanceof HTMLMediaElement) {
+      if (!media.defaultMuted) media.defaultMuted = true;
+      if (!media.muted) media.muted = true;
+    }
+  };
+  document.addEventListener('play', event => mute(event.target), true);
+  document.addEventListener('volumechange', event => mute(event.target), true);
+  new MutationObserver(() => {
+    document.querySelectorAll('video, audio').forEach(mute);
+  }).observe(document, {childList: true, subtree: true});
+})();"""
+
+_PAUSE_PLAYER_JS = """() => {
+  document.querySelector('#movie_player')?.pauseVideo?.();
+  document.querySelectorAll('video, audio').forEach(media => media.pause());
+}"""
+
 _VIDEO_STATE_JS = """() => {
   const p = document.querySelector('#movie_player');
   return {t: p?.querySelector('video')?.currentTime ?? -1, ad: !!p?.classList.contains('ad-showing')};
@@ -227,6 +247,7 @@ class BrowserSession:
             return self._page, self._state
         self._close_page()
         page = self._context().new_page()
+        page.add_init_script(_MUTE_ON_OPEN_JS)
         hits = self._hits = []
         seen = self._seen = []
         def on_response(r) -> None:
@@ -374,7 +395,7 @@ class BrowserSession:
                 if r.status != 200:
                     raise RuntimeError(f"timedtext HTTP {r.status}")
                 data = r.json()
-            page.wait_for_timeout(random.uniform(*KEEP_WATCHING) * 1000)
+            page.evaluate(_PAUSE_PLAYER_JS)
             return data
         finally:
             self._close_page()
