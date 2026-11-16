@@ -506,7 +506,20 @@
       "transcript": "transcripts/GtJKFhztgdM.txt",
       "transcript_attempts": 0,
       "added_at": "2026-11-14T01:35:08+00:00"
+    },
+    "TWoS5Nmyoc8": {
+      "id": "TWoS5Nmyoc8",
+      "title": "Stop Searching For the Perfect Model",
+      "url": "https://www.youtube.com/watch?v=TWoS5Nmyoc8",
+      "upload_date": "20261115",
+      "published": "2026-11-16T00:09:03+00:00",
+      "duration": 1677,
+      "thumbnail": "https://i.ytimg.com/vi/TWoS5Nmyoc8/mqdefault.jpg",
+      "description": "We're at the point where you have to stop searching for a single model to do all your work and realize that the best model is all of them\n\nThank you Macroscope for sponsoring! Check them out at: https://soydev.link/macroscope\n\nWant to sponsor a video? Learn more here: https://soydev.link/sponsor-me\n\nCheck out my Twitch, Twitter, Discord more at https://t3.gg\n\nS/O @Ph4seon3 for the awesome edit 🙏\n\n#ai #programming #coding",
+      "transcript": "transcripts/TWoS5Nmyoc8.txt",
+      "transcript_attempts": 0,
+      "added_at": "2026-11-16T08:25:36+00:00"
     }
   },
-  "last_fetch": "2026-11-14T22:35:27+00:00"
+  "last_fetch": "2026-11-16T08:25:41+00:00"
 }
