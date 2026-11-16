@@ -29,7 +29,7 @@ DATA_FILE = ROOT / "data" / "videos.json"
 TRANSCRIPT_DIR = ROOT / "transcripts"
 SUMMARY_DIR = ROOT / "summaries"
 
-CHANNEL_URL = "https://www.youtube.com/@t3dotgg/videos"
+CHANNEL_URL = "https://www.youtube.com/@theo/videos"
 DEFAULT_LIMIT = 15          # 每次扫描的最新视频数
 MIN_DURATION = 120          # 秒；更短的视为 short，跳过
 PARAGRAPH_SECONDS = 30      # 字幕按约 30 秒合并为一段

@@ -1,6 +1,6 @@
 # Theo 视频总结 —— 定期任务说明
 
-本目录用于定期抓取 YouTube 频道 **Theo - t3.gg (@t3dotgg)** 的新视频字幕，由 AI agent 生成**中文**要点总结，并生成可浏览的 `index.html`。
+本目录用于定期抓取 YouTube 频道 **Theo - t3.gg (@theo)** 的新视频字幕，由 AI agent 生成**中文**要点总结，并生成可浏览的 `index.html`。
 
 当你（AI agent）被要求"运行 / 更新 / 执行任务"时，按下面的步骤做完整一轮。
 

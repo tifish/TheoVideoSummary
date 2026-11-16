@@ -1,6 +1,6 @@
 # Theo 视频总结
 
-自动整理 YouTube 频道 [Theo - t3.gg](https://www.youtube.com/@t3dotgg) 的视频要点（中文）。
+自动整理 YouTube 频道 [Theo - t3.gg](https://www.youtube.com/@theo) 的视频要点（中文）。
 
 在线浏览：https://tifish.github.io/TheoVideoSummary/
 
