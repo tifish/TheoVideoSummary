@@ -532,7 +532,20 @@
       "transcript": "transcripts/9KvI-zg4mfo.txt",
       "transcript_attempts": 0,
       "added_at": "2026-11-18T23:41:42+00:00"
+    },
+    "TDoXk7o3rxs": {
+      "id": "TDoXk7o3rxs",
+      "title": "I'm gonna miss coding",
+      "url": "https://www.youtube.com/watch?v=TDoXk7o3rxs",
+      "upload_date": "20261119",
+      "published": "2026-11-19T17:59:24+00:00",
+      "duration": 1696,
+      "thumbnail": "https://i.ytimg.com/vi/TDoXk7o3rxs/mqdefault.jpg",
+      "description": "Coding is dead and I'm gonna miss writing it by hand, but we have an incredible opportunity moving forward. Lets talk about it. \n\nThank you Depot for sponsoring! Check them out at: https://soydev.link/depot\n\nSource: \nhttps://x.com/poteto/status/2103571281014861957\n\nWant to sponsor a video? Learn more here: https://soydev.link/sponsor-me\n\nCheck out my Twitch, Twitter, Discord more at https://t3.gg\n\nS/O @Ph4seon3 for the awesome edit 🙏\n\n#ai #programming #coding",
+      "transcript": "transcripts/TDoXk7o3rxs.txt",
+      "transcript_attempts": 0,
+      "added_at": "2026-11-19T23:17:43+00:00"
     }
   },
-  "last_fetch": "2026-11-18T23:41:54+00:00"
+  "last_fetch": "2026-11-19T23:17:56+00:00"
 }
