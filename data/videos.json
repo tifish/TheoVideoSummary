@@ -558,7 +558,20 @@
       "transcript": "transcripts/HQlk9RGx2dk.txt",
       "transcript_attempts": 0,
       "added_at": "2026-11-20T23:03:35+00:00"
+    },
+    "B2rFx4Fy1us": {
+      "id": "B2rFx4Fy1us",
+      "title": "If you like Open Models, I'm sorry",
+      "url": "https://www.youtube.com/watch?v=B2rFx4Fy1us",
+      "upload_date": "20261122",
+      "published": "2026-11-22T15:00:39+00:00",
+      "duration": 2419,
+      "thumbnail": "https://i.ytimg.com/vi/B2rFx4Fy1us/mqdefault.jpg",
+      "description": "It used to be that the Open Weight models were only a LITTLE behind, but it's gotten worse and we have to talk about it. \n\nThank you Blacksmith for sponsoring! Check them out at: https://soydev.link/blacksmith\n\nWant to sponsor a video? Learn more here: https://soydev.link/sponsor-me\n\nCheck out my Twitch, Twitter, Discord more at https://t3.gg\n\nS/O @Ph4seon3 for the awesome edit 🙏\n\n#ai #programming #coding",
+      "transcript": "transcripts/B2rFx4Fy1us.txt",
+      "transcript_attempts": 0,
+      "added_at": "2026-11-22T23:26:34+00:00"
     }
   },
-  "last_fetch": "2026-11-21T23:10:26+00:00"
+  "last_fetch": "2026-11-22T23:26:36+00:00"
 }
